@@ -1,0 +1,6 @@
+import 'package:uber_rider_app/features/uber_profile_feature/domain/entities/uber_profile_rider_entity.dart';
+
+abstract class UberProfileRepository {
+  Future<RiderEntity> getRiderProfile(String riderId);
+  Future<void> updateRiderProfile(RiderEntity riderEntity, String riderId);
+}
