@@ -1,0 +1,137 @@
+import 'dart:async';
+import 'dart:convert';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:http/http.dart' as http;
+import 'package:uber_rider_app/config/app_constant.dart';
+import 'package:uber_rider_app/features/uber_map_feature/data/data_sources/uber_map_data_source.dart';
+import 'package:uber_rider_app/features/uber_map_feature/data/models/generate_trip_model.dart';
+import 'package:uber_rider_app/features/uber_map_feature/data/models/rental_charges_model.dart';
+import 'package:uber_rider_app/features/uber_map_feature/data/models/uber_map_direction_model.dart';
+import 'package:uber_rider_app/features/uber_map_feature/data/models/uber_map_drivers_model.dart';
+import 'package:uber_rider_app/features/uber_map_feature/data/models/uber_map_prediction_model.dart';
+import 'package:uber_rider_app/features/uber_map_feature/data/models/vehicle_details_model.dart';
+
+class UberMapDataSourceImpl extends UberMapDataSource {
+  final http.Client client;
+  final FirebaseAuth auth;
+  final FirebaseFirestore firestore;
+  static const baseUrl = 'maps.googleapis.com';
+
+  UberMapDataSourceImpl(
+      {required this.auth, required this.firestore, required this.client});
+
+  @override
+  Future<PredictionsList> getUberMapPrediction(String placeName) async {
+    //const baseUrl = 'maps.googleapis.com';
+    final autoCompleteUrl = Uri.https(
+        baseUrl,
+        '/maps/api/place/autocomplete/json',
+        {'input': placeName, 'types': 'geocode', 'key': apiKey});
+    final response = await client.get(
+      autoCompleteUrl,
+      headers: {'Content-Type': 'application/json'},
+    );
+    if (response.statusCode == 200) {
+      return PredictionsList.fromJson(json.decode(response.body));
+    } else {
+      throw Exception();
+    }
+  }
+
+  @override
+  Future<Direction> getUberMapDirection(double sourceLat, double sourceLng,
+      double destinationLat, double destinationLng) async {
+    final directionUrl = Uri.https(baseUrl, '/maps/api/directions/json', {
+      'origin': "$sourceLat,$sourceLng",
+      'destination': "$destinationLat, $destinationLng",
+      'key': apiKey
+    });
+    final response = await client.get(
+      directionUrl,
+      headers: {'Content-Type': 'application/json'},
+    );
+    if (response.statusCode == 200) {
+      return Direction.fromJson(json.decode(response.body));
+    } else {
+      throw Exception();
+    }
+  }
+
+  @override
+  Stream<List<DriverModel>> getAvailableDrivers() {
+    final driverCollectionRef =
+        firestore.collection("drivers").where('is_online', isEqualTo: true);
+    //.where('city', isEqualTo: sourcePlaceName);
+
+    return driverCollectionRef.snapshots().map((querySnap) {
+      return querySnap.docs
+          .map((docSnap) => DriverModel.fromSnapshot(docSnap))
+          .toList();
+    });
+  }
+
+  @override
+  Future<RentalChargeModel> getRentalChargeForVehicle(double kms) async {
+    final pricesCollection = firestore.collection("prices");
+    DocumentSnapshot charges = await pricesCollection.doc("vehicles").get();
+    //fetch per km charge from prices collection and multiply by kms
+    final double rickShawRent = kms * charges.get("auto_rickshaw");
+    final double carRent = kms * charges.get("car");
+    final double bikeRent = kms * charges.get("bike");
+
+    final vehicleRent = RentalChargeModel(
+        auto_rickshaw: rickShawRent, car: carRent, bike: bikeRent);
+    // print(vehicleRent.car);
+    return vehicleRent;
+  }
+
+  @override
+  Stream generateTrip(GenerateTripModel generateTripModel) {
+    final todayDate = DateTime.now();
+    String docId = generateTripModel.riderId!.path.split('/').last.toString() +
+        todayDate.day.toString() +
+        todayDate.month.toString() +
+        todayDate.year.toString() +
+        todayDate.hour.toString();
+    final genarateTripCollection = firestore.collection("trips");
+    genarateTripCollection.doc(docId).set({
+      //isArrived
+      'trip_id': docId,
+      'destination': generateTripModel.destination,
+      'destination_location': generateTripModel.destinationLocation,
+      'distance': generateTripModel.distance,
+      'driver_id': generateTripModel.driverId,
+      'is_completed': generateTripModel.isCompleted,
+      'trip_date': generateTripModel.tripDate,
+      'rating': generateTripModel.rating,
+      'rider_id': generateTripModel.riderId,
+      'source': generateTripModel.source,
+      'source_location': generateTripModel.sourceLocation,
+      'travelling_time': generateTripModel.travellingTime,
+      'ready_for_trip': generateTripModel.readyForTrip,
+      'trip_amount': generateTripModel.tripAmount,
+      'is_arrived': generateTripModel.isArrived
+    });
+
+    return genarateTripCollection.doc(docId).snapshots();
+  }
+
+  @override
+  Future<VehicleModel> getVehicleDetails(
+      String vehicleType, String driverId) async {
+    final vehicleCollectionRef = firestore.collection(vehicleType);
+
+    return vehicleCollectionRef
+        .doc(driverId)
+        .get()
+        .then((value) => VehicleModel.fromMap(value.data()));
+  }
+
+  @override
+  Future<void> cancelTrip(String tripId) async {
+    final genarateTripCollection = firestore.collection("trips");
+    return genarateTripCollection.doc(tripId).update({'driver_id': null});
+  }
+}
