@@ -9,7 +9,8 @@ class DriverModel extends UberGetAvailableDriversEntity {
       final GeoPoint? currentLocation,
       final String? driverId,
       final String? mobile,
-      final String? overall_rating})
+      final String? overall_rating,
+      final String? profile_img})
       : super(
             name: name,
             driverId: driverId,
@@ -17,7 +18,8 @@ class DriverModel extends UberGetAvailableDriversEntity {
             currentLocation: currentLocation,
             is_online: is_online,
             overall_rating: overall_rating,
-            mobile: mobile);
+            mobile: mobile,
+            profile_img: profile_img);
 
   factory DriverModel.fromSnapshot(DocumentSnapshot documentSnapshot) {
     return DriverModel(
@@ -28,6 +30,7 @@ class DriverModel extends UberGetAvailableDriversEntity {
       driverId: documentSnapshot.get('driver_id'),
       overall_rating: documentSnapshot.get('overall_rating'),
       mobile: documentSnapshot.get('mobile'),
+      profile_img: documentSnapshot.get('profile_img'),
     );
   }
 
@@ -39,7 +42,8 @@ class DriverModel extends UberGetAvailableDriversEntity {
       "is_online": is_online,
       "driver_id": driverId,
       "overall_rating": overall_rating,
-      "mobile": mobile
+      "mobile": mobile,
+      "profile_img": profile_img
     };
   }
 }

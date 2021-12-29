@@ -11,6 +11,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:get/get_rx/src/rx_types/rx_types.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:uber_rider_app/features/uber_auth_feature/domain/use_cases/uber_auth_get_user_uid_usecase.dart';
 import 'package:uber_rider_app/features/uber_map_feature/data/models/generate_trip_model.dart';
 import 'package:uber_rider_app/features/uber_map_feature/domain/entities/uber_map_direction_entity.dart';
 import 'package:uber_rider_app/features/uber_map_feature/domain/entities/uber_map_get_drivers_entity.dart';
@@ -22,7 +23,6 @@ import 'package:uber_rider_app/features/uber_map_feature/domain/use_cases/uber_m
 import 'package:uber_rider_app/features/uber_map_feature/domain/use_cases/uber_map_get_drivers_usecase.dart';
 import 'package:uber_rider_app/features/uber_map_feature/domain/use_cases/uber_map_prediction_usecase.dart';
 import 'package:uber_rider_app/features/uber_map_feature/domain/use_cases/vehicle_details_usecase.dart';
-import 'package:uber_rider_app/features/uber_map_feature/presentation/pages/uber_map_live_tracking_page.dart';
 import 'package:uber_rider_app/features/uber_map_feature/presentation/widgets/map_confirmation_bottomsheet.dart';
 
 class UberMapController extends GetxController {
@@ -33,6 +33,7 @@ class UberMapController extends GetxController {
   final UberMapGenerateTripUseCase uberMapGenerateTripUseCase;
   final UberMapGetVehicleDetailsUseCase uberMapGetVehicleDetailsUseCase;
   final UberCancelTripUseCase uberCancelTripUseCase;
+  final UberAuthGetUserUidUseCase uberAuthGetUserUidUseCase;
   var uberMapPredictionData = <UberMapPredictionEntity>[].obs;
 
   var uberMapDirectionData = <UberMapDirectionEntity>[].obs;
@@ -76,7 +77,8 @@ class UberMapController extends GetxController {
       required this.uberMapGetRentalChargesUseCase,
       required this.uberMapGenerateTripUseCase,
       required this.uberMapGetVehicleDetailsUseCase,
-      required this.uberCancelTripUseCase});
+      required this.uberCancelTripUseCase,
+      required this.uberAuthGetUserUidUseCase});
 
   getPredictions(String placeName, String predictiontype) async {
     uberMapPredictionData.clear();
@@ -136,7 +138,6 @@ class UberMapController extends GetxController {
         uberMapGetDriversUsecase.call();
     availableDriversList.clear();
     availableDriversData.listen((driverData) async {
-      //print(driverData);
       for (int i = 0; i < driverData.length; i++) {
         if (Geolocator.distanceBetween(
                 sourceLatitude.value,
@@ -206,7 +207,7 @@ class UberMapController extends GetxController {
 
   openBottomSheet() {
     Get.bottomSheet(
-      Container(height: 250, child: const MapConfirmationBottomSheet()),
+      const SizedBox(height: 250, child: MapConfirmationBottomSheet()),
       isDismissible: false,
       enableDrag: false,
       elevation: 0.0,
@@ -236,13 +237,14 @@ class UberMapController extends GetxController {
         25));
   }
 
-  generateTrip(UberGetAvailableDriversEntity driverData) {
+  generateTrip(UberGetAvailableDriversEntity driverData) async {
     String vehicleType = driverData.vehicle!.path.split('/').first;
     String driverId = driverData.driverId.toString();
+    String riderId = await uberAuthGetUserUidUseCase.call();
     DocumentReference driverIdRef =
         FirebaseFirestore.instance.doc("/drivers/${driverId.trim()}");
     DocumentReference riderIdRef =
-        FirebaseFirestore.instance.doc("/riders/kuldip123456");
+        FirebaseFirestore.instance.doc("/riders/$riderId");
     final generateTripModel = GenerateTripModel(
         sourcePlaceName.value,
         destinationPlaceName.value,
@@ -261,7 +263,9 @@ class UberMapController extends GetxController {
             : vehicleType == 'auto'
                 ? autoRent.value
                 : bikeRent.value,
-        false);
+        false,
+        driverData.name.toString(),
+        vehicleType);
     Stream reqStatusData = uberMapGenerateTripUseCase.call(generateTripModel);
     findDriverLoading.value = true;
     reqStatusData.listen((data) async {
@@ -282,7 +286,8 @@ class UberMapController extends GetxController {
             req_accepted_driver_vehicle_data.company;
         req_accepted_driver_and_vehicle_data["vehicle_number_plate"] =
             req_accepted_driver_vehicle_data.numberPlate.toString();
-        print(req_accepted_driver_vehicle_data.numberPlate);
+        req_accepted_driver_and_vehicle_data["profile_img"] =
+            driverData.profile_img.toString();
         findDriverLoading.value = false;
         Get.snackbar(
           "Yahoo!",
@@ -291,32 +296,20 @@ class UberMapController extends GetxController {
         );
         reqAccepted.value = true;
       } else if (data.data()['is_arrived']) {
-        Get.snackbar("driver arrived!", "Now you can track from trip page!",
-            backgroundColor: Colors.greenAccent,
-            duration: const Duration(seconds: 5),
-            mainButton: TextButton(
-              onPressed: () {
-                Get.to(() => UberMapLiveTrackingPage(
-                    destinationLongitude: destinationLongitude.value,
-                    destinationLatitude: destinationLatitude.value,
-                    destinationPlaceName: destinationPlaceName.value,
-                    sourcePlaceName: sourcePlaceName.value,
-                    vehicleType: vehicleType));
-              },
-              child: const Text("Track Now"),
-            ));
-      } else {
-        Timer(const Duration(seconds: 45), () {
-          uberCancelTripUseCase.call(data.data()['trip_id']);
-          if (findDriverLoading.value) {
-            Get.snackbar("Sorry !",
-                "request denied by driver,please choose other driver",
-                snackPosition: SnackPosition.BOTTOM,
-                backgroundColor: Colors.redAccent);
-          }
-          findDriverLoading.value = false;
-        });
+        Get.snackbar(
+            "driver arrived!", "Now you can track from tripHistory page!",
+            backgroundColor: Colors.greenAccent);
       }
+      Timer(const Duration(seconds: 45), () {
+        if (reqStatus == false && findDriverLoading.value) {
+          uberCancelTripUseCase.call(data.data()['trip_id']);
+          Get.snackbar(
+              "Sorry !", "request denied by driver,please choose other driver",
+              snackPosition: SnackPosition.BOTTOM,
+              backgroundColor: Colors.redAccent);
+          findDriverLoading.value = false;
+        }
+      });
     });
   }
 }

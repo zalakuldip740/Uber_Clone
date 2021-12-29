@@ -16,4 +16,5 @@ abstract class UberMapRepository {
   Stream generateTrip(GenerateTripModel generateTripModel);
   Future<VehicleModel> getVehicleDetails(String vehicleType, String driverId);
   Future<void> cancelTrip(String tripId);
+  Future<void> tripPayment(String riderId, String driverId, int tripAmount);
 }

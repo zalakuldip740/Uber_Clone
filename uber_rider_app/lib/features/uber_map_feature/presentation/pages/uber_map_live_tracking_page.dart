@@ -6,22 +6,13 @@ import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:lottie/lottie.dart' as lottie;
 import 'package:uber_rider_app/features/uber_map_feature/presentation/getx/uber_live_tracking_controller.dart';
+import 'package:uber_rider_app/features/uber_trips_history_feature/presentation/getx/uber_trip_history_controller.dart';
 import 'package:uber_rider_app/injection_container.dart' as di;
 
 class UberMapLiveTrackingPage extends StatefulWidget {
-  final double destinationLatitude;
-  final double destinationLongitude;
-  final String sourcePlaceName;
-  final String destinationPlaceName;
-  final String vehicleType;
+  final int index;
 
-  const UberMapLiveTrackingPage(
-      {required this.destinationLatitude,
-      required this.destinationLongitude,
-      required this.destinationPlaceName,
-      required this.sourcePlaceName,
-      required this.vehicleType,
-      Key? key})
+  const UberMapLiveTrackingPage({Key? key, required this.index})
       : super(key: key);
 
   @override
@@ -32,6 +23,7 @@ class UberMapLiveTrackingPage extends StatefulWidget {
 class _UberMapLiveTrackingPageState extends State<UberMapLiveTrackingPage> {
   final UberLiveTrackingController _uberLiveTrackingController =
       Get.put(di.sl<UberLiveTrackingController>());
+  final UberTripsHistoryController _uberTripsHistoryController = Get.find();
 
   static const CameraPosition _defaultLocation = CameraPosition(
     target: LatLng(23.030357, 72.517845),
@@ -42,8 +34,7 @@ class _UberMapLiveTrackingPageState extends State<UberMapLiveTrackingPage> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    _uberLiveTrackingController.getDirectionData(widget.destinationLatitude,
-        widget.destinationLongitude, widget.vehicleType);
+    _uberLiveTrackingController.getDirectionData(widget.index);
   }
 
   @override
@@ -96,9 +87,9 @@ class _UberMapLiveTrackingPageState extends State<UberMapLiveTrackingPage> {
                     right: 10,
                     top: 55,
                     child: Container(
-                      padding: const EdgeInsets.all(8),
+                      padding: const EdgeInsets.all(18),
                       decoration: BoxDecoration(
-                          color: Colors.greenAccent.withOpacity(0.7),
+                          color: Colors.black.withOpacity(0.5),
                           borderRadius:
                               const BorderRadius.all(Radius.circular(15))),
                       child: Column(
@@ -108,15 +99,24 @@ class _UberMapLiveTrackingPageState extends State<UberMapLiveTrackingPage> {
                             mainAxisAlignment: MainAxisAlignment.spaceAround,
                             children: [
                               Text(
-                                widget.sourcePlaceName,
+                                _uberTripsHistoryController
+                                    .tripsHistory.value[widget.index].source
+                                    .toString(),
                                 style: const TextStyle(
-                                    fontWeight: FontWeight.w700, fontSize: 25),
+                                    fontWeight: FontWeight.w700,
+                                    fontSize: 25,
+                                    color: Colors.white),
                               ),
-                              const FaIcon(FontAwesomeIcons.longArrowAltRight),
+                              const FaIcon(FontAwesomeIcons.longArrowAltRight,
+                                  color: Colors.white),
                               Text(
-                                widget.destinationPlaceName,
+                                _uberTripsHistoryController.tripsHistory
+                                    .value[widget.index].destination
+                                    .toString(),
                                 style: const TextStyle(
-                                    fontWeight: FontWeight.w700, fontSize: 25),
+                                    fontWeight: FontWeight.w700,
+                                    fontSize: 25,
+                                    color: Colors.white),
                               ),
                             ],
                           ),
@@ -128,21 +128,25 @@ class _UberMapLiveTrackingPageState extends State<UberMapLiveTrackingPage> {
                             children: [
                               const Text(
                                 "Remaining :",
-                                style: TextStyle(fontWeight: FontWeight.w700),
+                                style: TextStyle(
+                                    fontWeight: FontWeight.w700,
+                                    color: Colors.white),
                               ),
                               Text(
                                 _uberLiveTrackingController
                                     .uberMapDirectionData.value[0].distanceText
                                     .toString(),
                                 style: const TextStyle(
-                                    fontWeight: FontWeight.w500),
+                                    fontWeight: FontWeight.w500,
+                                    color: Colors.white),
                               ),
                               Text(
                                 _uberLiveTrackingController
                                     .uberMapDirectionData.value[0].durationText
                                     .toString(),
                                 style: const TextStyle(
-                                    fontWeight: FontWeight.w500),
+                                    fontWeight: FontWeight.w500,
+                                    color: Colors.white),
                               )
                             ],
                           )
@@ -154,24 +158,24 @@ class _UberMapLiveTrackingPageState extends State<UberMapLiveTrackingPage> {
               ),
         floatingActionButton: GestureDetector(
           onTap: () {
-            _uberLiveTrackingController.getDirectionData(
-                widget.destinationLatitude,
-                widget.destinationLongitude,
-                widget.vehicleType);
+            _uberLiveTrackingController.getDirectionData(widget.index);
           },
           child: Container(
               width: 120,
               decoration: const BoxDecoration(
                   borderRadius: BorderRadius.all(Radius.circular(25)),
-                  color: Colors.greenAccent),
+                  color: Colors.black),
               padding: const EdgeInsets.all(10),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: const [
-                  Icon(Icons.refresh),
+                  Icon(Icons.refresh, color: Colors.white),
                   Text(
                     "Refresh",
-                    style: TextStyle(fontWeight: FontWeight.w600, fontSize: 18),
+                    style: TextStyle(
+                        fontWeight: FontWeight.w600,
+                        fontSize: 18,
+                        color: Colors.white),
                   ),
                 ],
               )),

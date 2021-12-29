@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
-import 'package:uber_rider_app/features/uber_map_feature/data/models/uber_map_drivers_model.dart';
 
 class TripHistoryEntity extends Equatable {
   final String? source;
@@ -11,12 +10,14 @@ class TripHistoryEntity extends Equatable {
   final DocumentReference? driverId;
   final DocumentReference? riderId;
   final String? travellingTime;
-  final DateTime? tripDate;
+  final String? tripDate;
   final String? tripId;
   final bool? isCompleted;
-  final String? tripAmount;
+  final int? tripAmount;
   final double? rating;
-  final DriverModel? driverModel;
+  final bool? isArrived;
+  final String? vehicleType;
+  final String? driverName;
 
   TripHistoryEntity(
       {this.source,
@@ -32,7 +33,9 @@ class TripHistoryEntity extends Equatable {
       this.isCompleted,
       this.tripAmount,
       this.rating,
-      this.driverModel});
+      this.isArrived,
+      this.driverName,
+      this.vehicleType});
 
   @override
   List<Object?> get props => [
@@ -49,6 +52,8 @@ class TripHistoryEntity extends Equatable {
         isCompleted,
         tripAmount,
         rating,
-        driverModel
+        isArrived,
+        driverName,
+        vehicleType
       ];
 }

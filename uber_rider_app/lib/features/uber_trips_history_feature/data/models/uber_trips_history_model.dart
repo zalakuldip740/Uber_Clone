@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:uber_rider_app/features/uber_map_feature/data/models/uber_map_drivers_model.dart';
 import 'package:uber_rider_app/features/uber_trips_history_feature/domain/entities/uber_trips_history_entity.dart';
 
 class TripHistoryModel extends TripHistoryEntity {
@@ -9,30 +8,36 @@ class TripHistoryModel extends TripHistoryEntity {
   final GeoPoint? destinationLocation;
   final double? distance;
   final String? travellingTime;
-  final DateTime? tripDate;
+  final String? tripDate;
   final String? tripId;
   final bool? isCompleted;
-  final String? tripAmount;
+  final int? tripAmount;
   final double? rating;
   final DocumentReference? driverId;
-  late DriverModel? driverModel;
+  final DocumentReference? riderId;
+  final bool? isArrived;
+  final String? vehicleType;
+  final String? driverName;
 
-  factory TripHistoryModel.fromJson(Map<dynamic, dynamic> value) {
+  factory TripHistoryModel.fromSnapshot(DocumentSnapshot documentSnapshot) {
     return TripHistoryModel(
-      source: value['source'],
-      destination: value['destination'],
-      sourceLocation: value['source_location'],
-      destinationLocation: value['destination_location'],
-      distance: value['distance'],
-      travellingTime: value['travelling_time'],
-      isCompleted: value['is_completed'],
-      tripDate: DateTime.parse(value['trip_date']),
-      tripId: value['trip_id'],
-      tripAmount: value['trip_amount'].toString(),
-      rating: value['rating'],
-      driverId: value['driver_id'],
-      driverModel: null,
-    );
+        source: documentSnapshot.get('source'),
+        destination: documentSnapshot.get('destination'),
+        sourceLocation: documentSnapshot.get('source_location'),
+        destinationLocation: documentSnapshot.get('destination_location'),
+        distance: documentSnapshot.get('distance'),
+        travellingTime: documentSnapshot.get('travelling_time'),
+        isCompleted: documentSnapshot.get('is_completed'),
+        tripDate: documentSnapshot.get('trip_date'),
+        //DateTime.parse(documentSnapshot.get('trip_date')),
+        tripId: documentSnapshot.get('trip_id'),
+        tripAmount: documentSnapshot.get('trip_amount'),
+        rating: documentSnapshot.get('rating'),
+        driverId: documentSnapshot.get('driver_id'),
+        riderId: documentSnapshot.get('rider_id'),
+        isArrived: documentSnapshot.get('is_arrived'),
+        driverName: documentSnapshot.get('driver_name'),
+        vehicleType: documentSnapshot.get('vehicleType'));
   }
 
   TripHistoryModel(
@@ -48,7 +53,10 @@ class TripHistoryModel extends TripHistoryEntity {
       required this.tripAmount,
       required this.rating,
       required this.driverId,
-      required this.driverModel})
+      required this.riderId,
+      required this.isArrived,
+      required this.driverName,
+      required this.vehicleType})
       : super(
             source: source,
             destination: destination,
@@ -62,5 +70,8 @@ class TripHistoryModel extends TripHistoryEntity {
             rating: rating,
             tripAmount: tripAmount,
             driverId: driverId,
-            driverModel: driverModel);
+            isArrived: isArrived,
+            driverName: driverName,
+            vehicleType: vehicleType,
+            riderId: riderId);
 }

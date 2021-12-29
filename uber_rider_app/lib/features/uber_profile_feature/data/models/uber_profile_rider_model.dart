@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:uber_rider_app/features/uber_profile_feature/domain/entities/uber_profile_rider_entity.dart';
 
 class RiderModel extends RiderEntity {
@@ -5,13 +6,14 @@ class RiderModel extends RiderEntity {
   const RiderModel(
       {String? name,
       String? email,
-      int? phoneNumber,
+      String? phoneNumber,
       String? city,
       String? profileUrl,
       String? homeAddress,
-      String? workAddress})
+      String? workAddress,
+      int? wallet})
       : super(name, email, phoneNumber, city, profileUrl, homeAddress,
-            workAddress);
+            workAddress, wallet);
 
   Map<String, dynamic> toDocument() {
     return {
@@ -21,18 +23,20 @@ class RiderModel extends RiderEntity {
       "city": city,
       "profile_img": profileUrl,
       "home_address": homeAddress,
-      "work_address": workAddress
+      "work_address": workAddress,
+      "wallet": wallet
     };
   }
 
-  factory RiderModel.fromMap(Map<String, dynamic>? data) {
+  factory RiderModel.fromSnapShot(DocumentSnapshot documentSnapshot) {
     return RiderModel(
-        name: data!['name'],
-        city: data['city'],
-        phoneNumber: data['mobile'],
-        email: data['email'],
-        workAddress: data['work_address'],
-        homeAddress: data['home_address'],
-        profileUrl: data['profile_img']);
+        name: documentSnapshot.get('name'),
+        city: documentSnapshot.get('city'),
+        phoneNumber: documentSnapshot.get('mobile'),
+        email: documentSnapshot.get('email'),
+        workAddress: documentSnapshot.get('work_address'),
+        homeAddress: documentSnapshot.get('home_address'),
+        profileUrl: documentSnapshot.get('profile_img'),
+        wallet: documentSnapshot.get('wallet'));
   }
 }

@@ -5,7 +5,7 @@ class UberProfileGetRiderProfileUsecase {
   final UberProfileRepository uberProfileRepository;
   UberProfileGetRiderProfileUsecase({required this.uberProfileRepository});
 
-  Future<RiderEntity> call(String riderId) async {
+  Stream<RiderEntity> call(String riderId) {
     return uberProfileRepository.getRiderProfile(riderId);
   }
 }
