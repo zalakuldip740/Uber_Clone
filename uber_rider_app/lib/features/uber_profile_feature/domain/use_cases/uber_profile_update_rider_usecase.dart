@@ -6,6 +6,6 @@ class UberProfileUpdateRiderUsecase {
   UberProfileUpdateRiderUsecase({required this.uberProfileRepository});
 
   Future<void> call(RiderEntity riderEntity, String riderId) async {
-    return uberProfileRepository.updateRiderProfile(riderEntity, riderId);
+    return await uberProfileRepository.updateRiderProfile(riderEntity, riderId);
   }
 }

@@ -5,6 +5,8 @@ import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_instance/src/extension_instance.dart';
 import 'package:uber_rider_app/features/uber_profile_feature/presentation/getx/uber_profile_controller.dart';
 import 'package:uber_rider_app/features/uber_profile_feature/presentation/pages/uber_profile_edit_page.dart';
+import 'package:uber_rider_app/features/uber_profile_feature/presentation/widgets/uber_add_money_dialog_widget.dart';
+import 'package:uber_rider_app/features/uber_trips_history_feature/presentation/pages/uber_trips_history_page.dart';
 import 'package:uber_rider_app/injection_container.dart' as di;
 
 class UberProfilePage extends StatefulWidget {
@@ -52,7 +54,8 @@ class _UberProfilePageState extends State<UberProfilePage> {
               () => ListTile(
                 title: _uberProfileController.isLoaded.value
                     ? Text(
-                        _uberProfileController.riderData!.name.toString(),
+                        _uberProfileController.riderData.value['name']
+                            .toString(),
                         style: const TextStyle(fontSize: 35),
                       )
                     : const Text("Loading Profile..."),
@@ -61,8 +64,12 @@ class _UberProfilePageState extends State<UberProfilePage> {
                     Get.to(() => UberProfileEditPage(
                         uberProfileController: _uberProfileController));
                   },
-                  child: const FaIcon(FontAwesomeIcons.solidUserCircle,
-                      color: Colors.black, size: 55),
+                  child: CircleAvatar(
+                    radius: 45,
+                    backgroundImage: NetworkImage(_uberProfileController
+                        .riderData.value['profileUrl']
+                        .toString()),
+                  ),
                 ),
                 subtitle: Row(
                   children: const [
@@ -126,56 +133,71 @@ class _UberProfilePageState extends State<UberProfilePage> {
                           ],
                         ),
                       ),
-                      Container(
-                        padding: const EdgeInsets.all(22),
-                        decoration: BoxDecoration(
-                            borderRadius:
-                                const BorderRadius.all(Radius.circular(12)),
-                            color: Colors.grey[100]),
-                        child: Column(
-                          children: const [
-                            FaIcon(FontAwesomeIcons.solidClock),
-                            SizedBox(
-                              height: 5,
-                            ),
-                            Text(
-                              " Trips ",
-                              style: TextStyle(fontWeight: FontWeight.w600),
-                            )
-                          ],
+                      GestureDetector(
+                        onTap: () {
+                          Get.to(() => const TripHistory());
+                        },
+                        child: Container(
+                          padding: const EdgeInsets.all(22),
+                          decoration: BoxDecoration(
+                              borderRadius:
+                                  const BorderRadius.all(Radius.circular(12)),
+                              color: Colors.grey[100]),
+                          child: Column(
+                            children: const [
+                              FaIcon(FontAwesomeIcons.solidClock),
+                              SizedBox(
+                                height: 5,
+                              ),
+                              Text(
+                                " Trips ",
+                                style: TextStyle(fontWeight: FontWeight.w600),
+                              )
+                            ],
+                          ),
                         ),
                       ),
                     ],
                   ),
-                  Container(
-                    margin: const EdgeInsets.all(15),
-                    padding: const EdgeInsets.all(18),
-                    decoration: BoxDecoration(
-                        borderRadius:
-                            const BorderRadius.all(Radius.circular(12)),
-                        color: Colors.grey[100]),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        const Text(
-                          "Uber Cash",
-                          style: TextStyle(
-                              fontWeight: FontWeight.w500, fontSize: 18),
-                        ),
-                        const Text("₹0.00",
+                  Obx(
+                    () => Container(
+                      margin: const EdgeInsets.all(15),
+                      padding: const EdgeInsets.all(18),
+                      decoration: BoxDecoration(
+                          borderRadius:
+                              const BorderRadius.all(Radius.circular(12)),
+                          color: Colors.grey[100]),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const Text(
+                            "Uber Cash",
                             style: TextStyle(
-                                fontWeight: FontWeight.w700, fontSize: 22)),
-                        Container(
-                          padding: const EdgeInsets.all(5),
-                          decoration: BoxDecoration(
-                              borderRadius:
-                                  const BorderRadius.all(Radius.circular(12)),
-                              color: Colors.grey[200]),
-                          child: const Text("Add ₹",
-                              style: TextStyle(
-                                  fontWeight: FontWeight.w500, fontSize: 16)),
-                        )
-                      ],
+                                fontWeight: FontWeight.w500, fontSize: 18),
+                          ),
+                          Text(
+                              "₹${_uberProfileController.riderData.value['wallet'].toString()}",
+                              style: const TextStyle(
+                                  fontWeight: FontWeight.w700, fontSize: 22)),
+                          GestureDetector(
+                            onTap: () {
+                              displayAddMoneyDialog(
+                                  context, _uberProfileController);
+                            },
+                            child: Container(
+                              padding: const EdgeInsets.all(5),
+                              decoration: BoxDecoration(
+                                  borderRadius: const BorderRadius.all(
+                                      Radius.circular(12)),
+                                  color: Colors.grey[200]),
+                              child: const Text("Add ₹",
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.w500,
+                                      fontSize: 16)),
+                            ),
+                          )
+                        ],
+                      ),
                     ),
                   ),
                   Divider(
@@ -212,9 +234,12 @@ class _UberProfilePageState extends State<UberProfilePage> {
                         style: TextStyle(
                             fontWeight: FontWeight.w500, fontSize: 16)),
                   ),
-                  const ListTile(
-                    leading: FaIcon(FontAwesomeIcons.signOutAlt),
-                    title: Text("Logout",
+                  ListTile(
+                    onTap: () {
+                      _uberProfileController.signOut();
+                    },
+                    leading: const FaIcon(FontAwesomeIcons.signOutAlt),
+                    title: const Text("Logout",
                         style: TextStyle(
                             fontWeight: FontWeight.w500, fontSize: 16)),
                   ),

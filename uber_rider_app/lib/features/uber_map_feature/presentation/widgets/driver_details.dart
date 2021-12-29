@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_phone_direct_caller/flutter_phone_direct_caller.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:uber_rider_app/features/uber_map_feature/presentation/getx/uber_map_controller.dart';
 
 class DriverDetails extends StatelessWidget {
@@ -23,12 +22,14 @@ class DriverDetails extends StatelessWidget {
           children: [
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: const [
+              children: [
                 CircleAvatar(
                   radius: 35,
-                  child: FaIcon(FontAwesomeIcons.user),
+                  backgroundImage: NetworkImage(uberMapController
+                      .req_accepted_driver_and_vehicle_data["profile_img"]
+                      .toString()),
                 ),
-                Text(
+                const Text(
                   "Driver Name : Vivek",
                   style: TextStyle(fontWeight: FontWeight.w700),
                 ),

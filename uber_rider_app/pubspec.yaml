@@ -50,6 +50,8 @@ dependencies:
   firebase_core: ^1.10.6
   lottie: ^1.2.1
   flutter_phone_direct_caller: ^2.1.0 # for call
+  image_picker: ^0.8.4+4
+  rating_dialog: ^2.0.3
 
 dev_dependencies:
   flutter_test:
@@ -79,6 +81,9 @@ flutter:
      - assets/bike.png
      - assets/auto.png
      - assets/search_anm.json
+     - assets/mobile_auth_img.png
+     - assets/otp_verification_img.png
+     - assets/welcome_img.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

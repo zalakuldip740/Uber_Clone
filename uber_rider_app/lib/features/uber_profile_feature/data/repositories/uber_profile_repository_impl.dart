@@ -9,8 +9,8 @@ class UberProfileRepositoryImpl extends UberProfileRepository {
   UberProfileRepositoryImpl({required this.uberProfileDataSource});
 
   @override
-  Future<RiderEntity> getRiderProfile(String riderId) async {
-    return await uberProfileDataSource.getRiderProfile(riderId);
+  Stream<RiderModel> getRiderProfile(String riderId) {
+    return uberProfileDataSource.getRiderProfile(riderId);
   }
 
   @override
@@ -26,5 +26,10 @@ class UberProfileRepositoryImpl extends UberProfileRepository {
       workAddress: riderEntity.workAddress,
     );
     return await uberProfileDataSource.updateRiderProfile(riderModel, riderId);
+  }
+
+  @override
+  Future<void> walletAddMoney(String riderId, int avlAmt, int addAmt) async {
+    return await uberProfileDataSource.walletAddMoney(riderId, avlAmt, addAmt);
   }
 }
