@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_navigation/src/extension_navigation.dart';
 import 'package:intl/intl.dart';
-import 'package:rating_dialog/rating_dialog.dart';
 import 'package:uber_rider_app/features/uber_map_feature/presentation/pages/uber_map_live_tracking_page.dart';
 import 'package:uber_rider_app/features/uber_trips_history_feature/domain/entities/uber_trips_history_entity.dart';
 import 'package:uber_rider_app/features/uber_trips_history_feature/presentation/getx/uber_trip_history_controller.dart';
+import 'package:uber_rider_app/features/uber_trips_history_feature/presentation/widgets/rating_dialog_widget.dart';
 
 class TripHistoryTile extends StatefulWidget {
   final TripHistoryEntity tripHistoryEntity;
@@ -63,13 +63,12 @@ class _TripHistoryTileState extends State<TripHistoryTile> {
                       style: ButtonStyle(
                         elevation: MaterialStateProperty.all(0.0),
                         backgroundColor: widget.tripHistoryEntity.isCompleted!
-                            ? MaterialStateProperty.all(Colors.greenAccent)
+                            ? MaterialStateProperty.all(Colors.green)
                             : widget.tripHistoryEntity.driverId != null &&
                                     widget.tripHistoryEntity.isArrived == true
-                                ? MaterialStateProperty.all(Colors.orangeAccent)
+                                ? MaterialStateProperty.all(Colors.orange)
                                 : widget.tripHistoryEntity.driverId == null
-                                    ? MaterialStateProperty.all(
-                                        Colors.redAccent)
+                                    ? MaterialStateProperty.all(Colors.red)
                                     : MaterialStateProperty.all(
                                         Colors.blueAccent),
                       ),
@@ -78,6 +77,9 @@ class _TripHistoryTileState extends State<TripHistoryTile> {
                       children: [
                         Text(DateFormat('dd-MM-yy hh:mm').format(DateTime.parse(
                             widget.tripHistoryEntity.tripDate!))),
+                        const SizedBox(
+                          width: 2,
+                        ),
                         Visibility(
                           visible: widget.tripHistoryEntity.rating != 0,
                           child: Container(
@@ -155,7 +157,8 @@ class _TripHistoryTileState extends State<TripHistoryTile> {
               child: Expanded(
                 child: ElevatedButton(
                   onPressed: () {
-                    _showRatingAppDialog();
+                    showRatingAppDialog(context, widget.tripHistoryEntity,
+                        widget.uberTripsHistoryController);
                   },
                   child: const Text('Rate Your Journey'),
                   style: ButtonStyle(
@@ -182,41 +185,6 @@ class _TripHistoryTileState extends State<TripHistoryTile> {
           overflow: TextOverflow.ellipsis,
         ),
       ],
-    );
-  }
-
-  void _showRatingAppDialog() {
-    final _ratingDialog = RatingDialog(
-      starColor: Colors.amber,
-      title: Text(
-        widget.tripHistoryEntity.driverName.toString(),
-        textAlign: TextAlign.center,
-      ),
-      message: const Text(
-        'Rate Your Journey',
-        textAlign: TextAlign.center,
-      ),
-      image: const CircleAvatar(
-        radius: 42,
-        backgroundColor: Colors.black,
-        child: CircleAvatar(
-          backgroundColor: Colors.white,
-          backgroundImage: NetworkImage(
-              "https://images.unsplash.com/profile-1533651674518-3723fed8d396?dpr=1&auto=format&fit=crop&w=150&h=150&q=60&crop=faces&bg=fff"),
-          radius: 40,
-        ),
-      ),
-      submitButtonText: 'Submit',
-      onSubmitted: (response) {
-        widget.uberTripsHistoryController.giveTripRating(
-            response.rating, widget.tripHistoryEntity.tripId.toString());
-      },
-    );
-
-    showDialog(
-      context: context,
-      barrierDismissible: true,
-      builder: (context) => _ratingDialog,
     );
   }
 }

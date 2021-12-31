@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:get/get_common/get_reset.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_instance/src/extension_instance.dart';
+import 'package:get/get_navigation/src/extension_navigation.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:uber_rider_app/features/uber_home_page_feature/presentation/pages/uber_home_page.dart';
 import 'package:uber_rider_app/features/uber_map_feature/presentation/getx/uber_map_controller.dart';
 import 'package:uber_rider_app/injection_container.dart' as di;
 
@@ -45,7 +46,7 @@ class _MapWithSourceDestinationFieldState
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async {
-        Get.reset();
+        Get.off(() => const UberHomePage());
         return true;
       },
       child: Scaffold(
@@ -96,8 +97,7 @@ class _MapWithSourceDestinationFieldState
                                   shape: BoxShape.circle, color: Colors.white),
                               child: GestureDetector(
                                 onTap: () {
-                                  Get.reset();
-                                  Navigator.pop(context);
+                                  Get.off(() => const UberHomePage());
                                 },
                                 child: const FaIcon(
                                   FontAwesomeIcons.arrowLeft,

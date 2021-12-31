@@ -295,7 +295,7 @@ class UberMapController extends GetxController {
           backgroundColor: Colors.greenAccent,
         );
         reqAccepted.value = true;
-      } else if (data.data()['is_arrived']) {
+      } else if (data.data()['is_arrived'] && !data.data()['is_completed']) {
         Get.snackbar(
             "driver arrived!", "Now you can track from tripHistory page!",
             backgroundColor: Colors.greenAccent);

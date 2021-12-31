@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:get/get_core/src/get_main.dart';
+import 'package:get/get_navigation/src/extension_navigation.dart';
 
 Widget buildStaticOtpVerificationBody() {
   return Column(
@@ -45,11 +47,11 @@ Widget buildStaticOtpVerificationBody() {
 
 Widget buildBottomOtpVerificationBody() {
   return Column(
-    children: const [
-      SizedBox(
+    children: [
+      const SizedBox(
         height: 18,
       ),
-      Text(
+      const Text(
         "Didn't received any code?",
         style: TextStyle(
           fontSize: 14,
@@ -58,17 +60,22 @@ Widget buildBottomOtpVerificationBody() {
         ),
         textAlign: TextAlign.center,
       ),
-      SizedBox(
+      const SizedBox(
         height: 10,
       ),
-      Text(
-        "Resend New Code",
-        style: TextStyle(
-          fontSize: 12,
-          fontWeight: FontWeight.bold,
-          color: Colors.blueAccent,
+      GestureDetector(
+        onTap: () {
+          Get.back();
+        },
+        child: const Text(
+          "Resend New Code",
+          style: TextStyle(
+            fontSize: 12,
+            fontWeight: FontWeight.bold,
+            color: Colors.blueAccent,
+          ),
+          textAlign: TextAlign.center,
         ),
-        textAlign: TextAlign.center,
       ),
     ],
   );

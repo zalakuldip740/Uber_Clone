@@ -4,12 +4,9 @@ import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
-import 'package:get/get_navigation/src/extension_navigation.dart';
 import 'package:get/get_rx/src/rx_types/rx_types.dart';
 import 'package:http/http.dart' as http;
 import 'package:uber_rider_app/config/app_constant.dart';
-import 'package:uber_rider_app/features/uber_home_page_map_feature/presentation/pages/uber_home_page.dart';
 import 'package:uber_rider_app/features/uber_map_feature/data/data_sources/uber_map_data_source.dart';
 import 'package:uber_rider_app/features/uber_map_feature/data/models/generate_trip_model.dart';
 import 'package:uber_rider_app/features/uber_map_feature/data/models/rental_charges_model.dart';
@@ -138,13 +135,18 @@ class UberMapDataSourceImpl extends UberMapDataSource {
 
   @override
   Future<void> cancelTrip(String tripId) async {
-    final genarateTripCollection = firestore.collection("trips");
-    return genarateTripCollection.doc(tripId).update({'driver_id': null});
+    try {
+      final genarateTripCollection = firestore.collection("trips");
+      await genarateTripCollection.doc(tripId).update({'driver_id': null});
+    } on FirebaseException catch (e) {
+      Get.snackbar("Error", e.code.toString());
+    }
   }
 
   @override
-  Future<void> tripPayment(
+  Future<String> tripPayment(
       String riderId, String driverId, int tripAmount) async {
+    var res = "".obs;
     var riderAmt = 0.obs;
     var driverAmt = 0.obs;
     await firestore.collection("riders").doc(riderId).get().then((value) {
@@ -155,8 +157,7 @@ class UberMapDataSourceImpl extends UberMapDataSource {
       });
     }).whenComplete(() async {
       if (riderAmt.value < tripAmount) {
-        Get.snackbar("Low balance!", "Pay via Cash method",
-            snackPosition: SnackPosition.BOTTOM);
+        res.value = "low_balance";
       } else {
         await firestore
             .collection("riders")
@@ -167,8 +168,9 @@ class UberMapDataSourceImpl extends UberMapDataSource {
             .collection("drivers")
             .doc(driverId)
             .update({'wallet': driverAmt.value + tripAmount});
-        Get.offAll(() => const UberHomePage());
+        res.value = "done";
       }
     });
+    return Future.value(res.value);
   }
 }

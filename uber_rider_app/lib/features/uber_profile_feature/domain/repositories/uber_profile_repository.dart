@@ -3,5 +3,5 @@ import 'package:uber_rider_app/features/uber_profile_feature/domain/entities/ube
 abstract class UberProfileRepository {
   Stream<RiderEntity> getRiderProfile(String riderId);
   Future<void> updateRiderProfile(RiderEntity riderEntity, String riderId);
-  Future<void> walletAddMoney(String riderId, int avlAmt, int addAmt);
+  Future<void> walletAddMoney(String riderId, int addAmt);
 }

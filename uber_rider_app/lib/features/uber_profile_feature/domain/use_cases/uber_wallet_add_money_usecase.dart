@@ -4,7 +4,7 @@ class UberWalletAddMoneyUsecase {
   final UberProfileRepository uberProfileRepository;
   UberWalletAddMoneyUsecase({required this.uberProfileRepository});
 
-  Future<void> call(String riderId, int avlAmt, int addAmt) async {
-    return await uberProfileRepository.walletAddMoney(riderId, avlAmt, addAmt);
+  Future<void> call(String riderId, int addAmt) async {
+    return await uberProfileRepository.walletAddMoney(riderId, addAmt);
   }
 }

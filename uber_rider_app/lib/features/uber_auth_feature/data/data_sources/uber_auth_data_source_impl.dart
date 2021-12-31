@@ -39,6 +39,7 @@ class UberAuthDataSourceImpl extends UberAuthDataSource {
       },
       codeSent: (String verificationId, int? forceResendingToken) async {
         verId.value = verificationId;
+        Get.closeCurrentSnackbar();
         Get.snackbar('done', "otp sent to $phoneNumber");
         Get.to(() => const OtpVerificationPage());
       },

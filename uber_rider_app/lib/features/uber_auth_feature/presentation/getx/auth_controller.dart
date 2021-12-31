@@ -7,7 +7,7 @@ import 'package:uber_rider_app/features/uber_auth_feature/domain/use_cases/uber_
 import 'package:uber_rider_app/features/uber_auth_feature/domain/use_cases/uber_auth_otp_verification_usecase.dart';
 import 'package:uber_rider_app/features/uber_auth_feature/domain/use_cases/uber_auth_phone_verification_usecase.dart';
 import 'package:uber_rider_app/features/uber_auth_feature/presentation/pages/uber_auth_register_page.dart';
-import 'package:uber_rider_app/features/uber_home_page_map_feature/presentation/pages/uber_home_page.dart';
+import 'package:uber_rider_app/features/uber_home_page_feature/presentation/pages/uber_home_page.dart';
 import 'package:uber_rider_app/features/uber_profile_feature/domain/entities/uber_profile_rider_entity.dart';
 import 'package:uber_rider_app/features/uber_profile_feature/domain/use_cases/uber_profile_update_rider_usecase.dart';
 
@@ -40,14 +40,17 @@ class UberAuthController extends GetxController {
 
   verifyPhoneNumber(String phoneNumber) async {
     await uberAuthPhoneVerificationUseCase.call(phoneNumber);
-    Get.snackbar("Verifying Number", "Please wait !");
+    Get.snackbar("Verifying Number", "Please wait !",
+        showProgressIndicator: true, duration: const Duration(seconds: 10));
   }
 
   verifyOtp(String otp) async {
-    Get.snackbar("Validating Otp", "Please wait !");
+    Get.snackbar("Validating Otp", "Please wait !",
+        showProgressIndicator: true, duration: const Duration(seconds: 10));
     await uberAuthOtpVerificationUseCase.call(otp).whenComplete(() async {
       String riderId = await uberAuthGetUserUidUseCase.call();
       if (riderId.isNotEmpty) {
+        Get.closeCurrentSnackbar();
         final userStatus = await checkUserStatus();
         if (userStatus) {
           Get.offAll(() => const UberHomePage());
@@ -81,9 +84,15 @@ class UberAuthController extends GetxController {
         homeAddress,
         workAddress,
         0);
-    String riderId = await uberAuthGetUserUidUseCase.call();
-    await uberProfileUpdateRiderUsecase.call(riderEntity, riderId);
-    Get.snackbar("done", "registration successful!");
-    Get.offAll(() => const UberHomePage());
+    await uberAuthGetUserUidUseCase.call().then((riderId) async {
+      await uberProfileUpdateRiderUsecase.call(riderEntity, riderId);
+      Get.snackbar("uploading details!", "Please wait !",
+          showProgressIndicator: true, duration: const Duration(seconds: 10));
+    });
+    final userStatus = await checkUserStatus();
+    if (userStatus) {
+      Get.snackbar("done", "registration successful!");
+      Get.offAll(() => const UberHomePage());
+    }
   }
 }
