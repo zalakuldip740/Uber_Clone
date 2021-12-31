@@ -3,5 +3,5 @@ import 'package:uber_rider_app/features/uber_profile_feature/data/models/uber_pr
 abstract class UberProfileDataSource {
   Stream<RiderModel> getRiderProfile(String riderId);
   Future<void> updateRiderProfile(RiderModel riderModel, String riderId);
-  Future<void> walletAddMoney(String riderId, int avlAmt, int addAmt);
+  Future<void> walletAddMoney(String riderId, int addAmt);
 }

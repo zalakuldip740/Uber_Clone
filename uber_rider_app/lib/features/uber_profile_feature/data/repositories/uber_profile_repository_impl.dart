@@ -17,19 +17,19 @@ class UberProfileRepositoryImpl extends UberProfileRepository {
   Future<void> updateRiderProfile(
       RiderEntity riderEntity, String riderId) async {
     final riderModel = RiderModel(
-      name: riderEntity.name,
-      email: riderEntity.email,
-      phoneNumber: riderEntity.phoneNumber,
-      city: riderEntity.city,
-      profileUrl: riderEntity.profileUrl,
-      homeAddress: riderEntity.homeAddress,
-      workAddress: riderEntity.workAddress,
-    );
+        name: riderEntity.name,
+        email: riderEntity.email,
+        phoneNumber: riderEntity.phoneNumber,
+        city: riderEntity.city,
+        profileUrl: riderEntity.profileUrl,
+        homeAddress: riderEntity.homeAddress,
+        workAddress: riderEntity.workAddress,
+        wallet: riderEntity.wallet);
     return await uberProfileDataSource.updateRiderProfile(riderModel, riderId);
   }
 
   @override
-  Future<void> walletAddMoney(String riderId, int avlAmt, int addAmt) async {
-    return await uberProfileDataSource.walletAddMoney(riderId, avlAmt, addAmt);
+  Future<void> walletAddMoney(String riderId, int addAmt) async {
+    return await uberProfileDataSource.walletAddMoney(riderId, addAmt);
   }
 }

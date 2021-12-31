@@ -2,9 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_instance/src/extension_instance.dart';
 import 'package:get/get_navigation/src/extension_navigation.dart';
-import 'package:uber_rider_app/features/uber_home_page_map_feature/presentation/pages/uber_home_page.dart';
+import 'package:get/get_navigation/src/snackbar/snackbar.dart';
 import 'package:uber_rider_app/features/uber_map_feature/presentation/getx/uber_live_tracking_controller.dart';
+import 'package:uber_rider_app/features/uber_profile_feature/presentation/getx/uber_profile_controller.dart';
+import 'package:uber_rider_app/features/uber_profile_feature/presentation/widgets/uber_add_money_dialog_widget.dart';
 import 'package:uber_rider_app/features/uber_trips_history_feature/domain/entities/uber_trips_history_entity.dart';
+import 'package:uber_rider_app/features/uber_trips_history_feature/presentation/getx/uber_trip_history_controller.dart';
+import 'package:uber_rider_app/features/uber_trips_history_feature/presentation/widgets/rating_dialog_widget.dart';
 import 'package:uber_rider_app/injection_container.dart' as di;
 
 class UberPaymentBottomSheet extends StatefulWidget {
@@ -20,6 +24,9 @@ class UberPaymentBottomSheet extends StatefulWidget {
 class _UberPaymentBottomSheetState extends State<UberPaymentBottomSheet> {
   final UberLiveTrackingController _uberLiveTrackingController =
       Get.put(di.sl<UberLiveTrackingController>());
+  final UberTripsHistoryController _uberTripsHistoryController =
+      Get.put(di.sl<UberTripsHistoryController>());
+  final UberProfileController _uberProfileController = Get.find();
 
   @override
   Widget build(BuildContext context) {
@@ -44,14 +51,29 @@ class _UberPaymentBottomSheetState extends State<UberPaymentBottomSheet> {
               style: ButtonStyle(
                   elevation: MaterialStateProperty.all(0.0),
                   padding: MaterialStateProperty.all(const EdgeInsets.all(15))),
-              onPressed: () {
+              onPressed: () async {
                 String riderId =
                     widget.tripHistoryEntity.riderId!.path.split('/').last;
                 String driverId =
                     widget.tripHistoryEntity.driverId!.path.split('/').last;
                 int? tripAmount = widget.tripHistoryEntity.tripAmount;
-                _uberLiveTrackingController.makePayment(
+                String res = await _uberLiveTrackingController.makePayment(
                     riderId, driverId, tripAmount!);
+                if (res == "done") {
+                  Get.back();
+                  showRatingAppDialog(context, widget.tripHistoryEntity,
+                      _uberTripsHistoryController);
+                } else {
+                  Get.snackbar("Low balance!", "Pay via Cash or add money",
+                      snackPosition: SnackPosition.BOTTOM,
+                      duration: const Duration(seconds: 7),
+                      mainButton: TextButton(
+                          onPressed: () {
+                            displayAddMoneyDialog(
+                                context, _uberProfileController);
+                          },
+                          child: const Text("Add Money")));
+                }
               },
               child: Text(
                 "Pay \u{20B9}${widget.tripHistoryEntity.tripAmount} to ${widget.tripHistoryEntity.driverName}",
@@ -74,7 +96,9 @@ class _UberPaymentBottomSheetState extends State<UberPaymentBottomSheet> {
                   elevation: MaterialStateProperty.all(0.0),
                   padding: MaterialStateProperty.all(const EdgeInsets.all(15))),
               onPressed: () {
-                Get.offAll(() => const UberHomePage());
+                Get.back();
+                showRatingAppDialog(context, widget.tripHistoryEntity,
+                    _uberTripsHistoryController);
               },
               child: Text(
                 "Pay \u{20B9}${widget.tripHistoryEntity.tripAmount} cash to ${widget.tripHistoryEntity.driverName}",

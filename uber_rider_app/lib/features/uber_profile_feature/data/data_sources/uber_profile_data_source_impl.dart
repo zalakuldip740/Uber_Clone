@@ -31,10 +31,20 @@ class UberProfileDataSourceImpl extends UberProfileDataSource {
   }
 
   @override
-  Future<void> walletAddMoney(String riderId, int avlAmt, int addAmt) async {
-    return await firestore
-        .collection("riders")
-        .doc(riderId)
-        .update({'wallet': avlAmt + addAmt});
+  Future<void> walletAddMoney(String riderId, int addAmt) async {
+    try {
+      await firestore
+          .collection("riders")
+          .doc(riderId)
+          .get()
+          .then((value) async {
+        await firestore
+            .collection("riders")
+            .doc(riderId)
+            .update({'wallet': value.get('wallet') + addAmt});
+      });
+    } on FirebaseException catch (e) {
+      Get.snackbar("Error", e.code.toString());
+    }
   }
 }

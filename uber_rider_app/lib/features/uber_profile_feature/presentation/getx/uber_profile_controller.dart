@@ -74,7 +74,6 @@ class UberProfileController extends GetxController {
 
   walletAddMoney(int addAmt) async {
     String riderId = await uberAuthGetUserUidUseCase.call();
-    int avlAmt = riderData.value['wallet'];
-    await uberWalletAddMoneyUsecase.call(riderId, avlAmt, addAmt);
+    await uberWalletAddMoneyUsecase.call(riderId, addAmt);
   }
 }

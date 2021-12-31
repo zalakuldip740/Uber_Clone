@@ -24,7 +24,7 @@ class RiderModel extends RiderEntity {
       "profile_img": profileUrl,
       "home_address": homeAddress,
       "work_address": workAddress,
-      "wallet": wallet
+      "wallet": wallet,
     };
   }
 

@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:get_it/get_it.dart';
 import 'package:http/http.dart' as http;
+import 'package:uber_rider_app/core/network_checker/uber_network_checker_controller.dart';
 import 'package:uber_rider_app/features/uber_auth_feature/data/data_sources/uber_auth_data_source.dart';
 import 'package:uber_rider_app/features/uber_auth_feature/data/data_sources/uber_auth_data_source_impl.dart';
 import 'package:uber_rider_app/features/uber_auth_feature/data/repositories/uber_auth_repository_impl.dart';
@@ -14,12 +15,7 @@ import 'package:uber_rider_app/features/uber_auth_feature/domain/use_cases/uber_
 import 'package:uber_rider_app/features/uber_auth_feature/domain/use_cases/uber_auth_otp_verification_usecase.dart';
 import 'package:uber_rider_app/features/uber_auth_feature/domain/use_cases/uber_auth_phone_verification_usecase.dart';
 import 'package:uber_rider_app/features/uber_auth_feature/domain/use_cases/uber_auth_sign_out_usecase.dart';
-import 'package:uber_rider_app/features/uber_home_page_map_feature/data/data_sources/user_current_location_data_source.dart';
-import 'package:uber_rider_app/features/uber_home_page_map_feature/data/data_sources/user_current_location_data_source_impl.dart';
-import 'package:uber_rider_app/features/uber_home_page_map_feature/data/repositories/user_current_location_repository_impl.dart';
-import 'package:uber_rider_app/features/uber_home_page_map_feature/domain/repositories/user_current_location_repository.dart';
-import 'package:uber_rider_app/features/uber_home_page_map_feature/domain/use_cases/get_user_current_location_usecase.dart';
-import 'package:uber_rider_app/features/uber_home_page_map_feature/presentation/cubit/uber_current_location_cubit.dart';
+import 'package:uber_rider_app/features/uber_home_page_feature/presentation/getx/uber_home_controller.dart';
 import 'package:uber_rider_app/features/uber_map_feature/data/data_sources/uber_map_data_source.dart';
 import 'package:uber_rider_app/features/uber_map_feature/data/data_sources/uber_map_data_source_impl.dart';
 import 'package:uber_rider_app/features/uber_map_feature/data/repositories/uber_map_repository_impl.dart';
@@ -46,6 +42,11 @@ import 'package:uber_rider_app/features/uber_trips_history_feature/domain/use_ca
 import 'package:uber_rider_app/features/uber_trips_history_feature/presentation/getx/uber_trip_history_controller.dart';
 
 import 'features/uber_auth_feature/presentation/getx/auth_controller.dart';
+import 'features/uber_home_page_feature/data/data_sources/user_current_location_data_source.dart';
+import 'features/uber_home_page_feature/data/data_sources/user_current_location_data_source_impl.dart';
+import 'features/uber_home_page_feature/data/repositories/user_current_location_repository_impl.dart';
+import 'features/uber_home_page_feature/domain/repositories/user_current_location_repository.dart';
+import 'features/uber_home_page_feature/domain/use_cases/get_user_current_location_usecase.dart';
 import 'features/uber_map_feature/domain/use_cases/generate_trip_usecase.dart';
 import 'features/uber_map_feature/domain/use_cases/get_rental_charges_usecase.dart';
 import 'features/uber_map_feature/presentation/getx/uber_live_tracking_controller.dart';
@@ -55,11 +56,14 @@ import 'features/uber_trips_history_feature/data/data_sources/uber_trips_history
 final sl = GetIt.instance;
 
 Future<void> init() async {
+
+  //network getx
+
+  sl.registerFactory<UberNetWorkStatusChecker>(() => UberNetWorkStatusChecker());
   // feature:- current location
-  //cubit
-  // usercurrentlocationcubit
-  sl.registerFactory<UberCurrentLocationCubit>(
-      () => UberCurrentLocationCubit(getUserCurrentLocationUsecase: sl.call()));
+  //getx
+  sl.registerFactory<UberHomeController>(
+      () => UberHomeController(getUserCurrentLocationUsecase: sl.call()));
 
   //current location Usecase
 

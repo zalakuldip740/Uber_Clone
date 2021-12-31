@@ -113,7 +113,7 @@ class UberLiveTrackingController extends GetxController {
   }
 
   makePayment(String riderId, String driverId, int tripAmount) async {
-    await uberTripPaymentUseCase.call(riderId, driverId, tripAmount);
+    return await uberTripPaymentUseCase.call(riderId, driverId, tripAmount);
   }
 
   addMarkers(icon, String markerId, double lat, double lng) async {
