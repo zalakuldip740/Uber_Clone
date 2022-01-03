@@ -23,7 +23,6 @@ import 'package:uber_rider_app/features/uber_map_feature/domain/use_cases/uber_m
 import 'package:uber_rider_app/features/uber_map_feature/domain/use_cases/uber_map_get_drivers_usecase.dart';
 import 'package:uber_rider_app/features/uber_map_feature/domain/use_cases/uber_map_prediction_usecase.dart';
 import 'package:uber_rider_app/features/uber_map_feature/domain/use_cases/vehicle_details_usecase.dart';
-import 'package:uber_rider_app/features/uber_map_feature/presentation/widgets/map_confirmation_bottomsheet.dart';
 
 class UberMapController extends GetxController {
   final UberMapPredictionUsecase uberMapPredictionUsecase;
@@ -57,6 +56,7 @@ class UberMapController extends GetxController {
   var markers = <Marker>[].obs;
 
   var isPoliLineDraw = false.obs;
+  var isReadyToDisplayAvlDriver = false.obs;
 
   var carRent = 0.obs;
   var bikeRent = 0.obs;
@@ -105,6 +105,8 @@ class UberMapController extends GetxController {
           destinationLocations[0].longitude,
           "destination_marker",
           BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed));
+      animateCamera(
+          destinationLocations[0].latitude, destinationLocations[0].longitude);
     } else {
       availableDriversList.clear();
       sourcePlaceName.value = sourcePlace;
@@ -117,11 +119,17 @@ class UberMapController extends GetxController {
           sourceLocations[0].longitude,
           "source_marker",
           BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueGreen));
+      animateCamera(sourceLocations[0].latitude, sourceLocations[0].longitude);
     } // set place in textfield
     if (sourcePlaceName.value.isNotEmpty &&
         destinationPlaceName.value.isNotEmpty) {
-      getDirection();
-    } //get direction data
+      if (sourcePlaceName.value != destinationPlaceName.value) {
+        getDirection();
+      } //get direction data
+      else {
+        Get.snackbar("error", "both location can't be same!");
+      }
+    }
   }
 
   getDirection() async {
@@ -202,19 +210,7 @@ class UberMapController extends GetxController {
     carRent.value = rentCharge.car.round();
     bikeRent.value = rentCharge.bike.round();
     autoRent.value = rentCharge.auto_rickshaw.round();
-    openBottomSheet();
-  }
-
-  openBottomSheet() {
-    Get.bottomSheet(
-      const SizedBox(height: 250, child: MapConfirmationBottomSheet()),
-      isDismissible: false,
-      enableDrag: false,
-      elevation: 0.0,
-      ignoreSafeArea: true,
-      backgroundColor: Colors.transparent,
-      barrierColor: Colors.transparent,
-    );
+    isReadyToDisplayAvlDriver.value = true;
   }
 
   Future<Uint8List> getBytesFromAsset(String path, int width) async {
@@ -229,12 +225,23 @@ class UberMapController extends GetxController {
 
   animateCameraPolyline() async {
     final GoogleMapController _controller = await controller.future;
+
     _controller.animateCamera(CameraUpdate.newLatLngBounds(
         LatLngBounds(
             southwest: LatLng(sourceLatitude.value, sourceLongitude.value),
             northeast:
                 LatLng(destinationLatitude.value, destinationLongitude.value)),
-        25));
+        50));
+    animateCamera(sourceLatitude.value, sourceLongitude.value);
+  }
+
+  animateCamera(double lat, double lng) async {
+    final GoogleMapController _controller = await controller.future;
+    CameraPosition newPos = CameraPosition(
+      target: LatLng(lat, lng),
+      zoom: 15,
+    );
+    _controller.animateCamera(CameraUpdate.newCameraPosition(newPos));
   }
 
   generateTrip(UberGetAvailableDriversEntity driverData) async {
@@ -292,21 +299,18 @@ class UberMapController extends GetxController {
         Get.snackbar(
           "Yahoo!",
           "request accepted by driver,driver will arrive within 10 min",
-          backgroundColor: Colors.greenAccent,
         );
         reqAccepted.value = true;
       } else if (data.data()['is_arrived'] && !data.data()['is_completed']) {
         Get.snackbar(
-            "driver arrived!", "Now you can track from tripHistory page!",
-            backgroundColor: Colors.greenAccent);
+            "driver arrived!", "Now you can track from tripHistory page!");
       }
       Timer(const Duration(seconds: 45), () {
         if (reqStatus == false && findDriverLoading.value) {
           uberCancelTripUseCase.call(data.data()['trip_id']);
           Get.snackbar(
               "Sorry !", "request denied by driver,please choose other driver",
-              snackPosition: SnackPosition.BOTTOM,
-              backgroundColor: Colors.redAccent);
+              snackPosition: SnackPosition.BOTTOM);
           findDriverLoading.value = false;
         }
       });

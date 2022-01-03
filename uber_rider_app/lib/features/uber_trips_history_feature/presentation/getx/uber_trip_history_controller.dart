@@ -18,6 +18,7 @@ class UberTripsHistoryController extends GetxController {
   var tripsHistory = <TripHistoryEntity>[].obs;
 
   getTripsHistory() async {
+    tripsHistory.clear();
     String riderId = await uberAuthGetUserUidUseCase.call();
     final tripsHistoryData = uberGetTripHistoryUsecase.call(riderId);
     tripsHistoryData.listen((data) {

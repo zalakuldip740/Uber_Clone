@@ -7,6 +7,7 @@ import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:uber_rider_app/features/uber_home_page_feature/presentation/pages/uber_home_page.dart';
 import 'package:uber_rider_app/features/uber_map_feature/presentation/getx/uber_map_controller.dart';
+import 'package:uber_rider_app/features/uber_map_feature/presentation/widgets/map_confirmation_bottomsheet.dart';
 import 'package:uber_rider_app/injection_container.dart' as di;
 
 class MapWithSourceDestinationField extends StatefulWidget {
@@ -54,30 +55,44 @@ class _MapWithSourceDestinationFieldState
           child: Stack(
             children: [
               Obx(
-                () => GoogleMap(
-                  mapType: MapType.normal,
-                  initialCameraPosition: widget.defaultCameraPosition,
-                  myLocationButtonEnabled: true,
-                  myLocationEnabled: true,
-                  markers: _uberMapController.markers.value.toSet(),
-                  polylines: {
-                    Polyline(
-                        polylineId: const PolylineId("polyLine"),
-                        color: Colors.black,
-                        width: 6,
-                        jointType: JointType.round,
-                        startCap: Cap.roundCap,
-                        endCap: Cap.roundCap,
-                        geodesic: true,
-                        points: _uberMapController.polylineCoordinates.value),
-                  },
-                  zoomControlsEnabled: false,
-                  zoomGesturesEnabled: true,
-                  onMapCreated: (GoogleMapController controller) {
-                    _uberMapController.controller.complete(controller);
-                    controller.animateCamera(CameraUpdate.newCameraPosition(
-                        widget.newCameraPosition));
-                  },
+                () => Column(
+                  children: [
+                    Expanded(
+                      child: GoogleMap(
+                        mapType: MapType.normal,
+                        initialCameraPosition: widget.defaultCameraPosition,
+                        myLocationButtonEnabled: true,
+                        myLocationEnabled: true,
+                        markers: _uberMapController.markers.value.toSet(),
+                        polylines: {
+                          Polyline(
+                              polylineId: const PolylineId("polyLine"),
+                              color: Colors.black,
+                              width: 6,
+                              jointType: JointType.round,
+                              startCap: Cap.roundCap,
+                              endCap: Cap.roundCap,
+                              geodesic: true,
+                              points:
+                                  _uberMapController.polylineCoordinates.value),
+                        },
+                        zoomControlsEnabled: false,
+                        zoomGesturesEnabled: true,
+                        onMapCreated: (GoogleMapController controller) {
+                          _uberMapController.controller.complete(controller);
+                          controller.animateCamera(
+                              CameraUpdate.newCameraPosition(
+                                  widget.newCameraPosition));
+                        },
+                      ),
+                    ),
+                    Visibility(
+                      visible:
+                          _uberMapController.isReadyToDisplayAvlDriver.value,
+                      child: const SizedBox(
+                          height: 250, child: MapConfirmationBottomSheet()),
+                    )
+                  ],
                 ),
               ),
               Column(

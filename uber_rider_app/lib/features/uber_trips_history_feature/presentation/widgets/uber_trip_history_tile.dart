@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_navigation/src/extension_navigation.dart';
 import 'package:intl/intl.dart';
@@ -143,8 +144,8 @@ class _TripHistoryTileState extends State<TripHistoryTile> {
                   widget.tripHistoryEntity.driverId != null
                       ? _iconWithTitle(
                           " " + widget.tripHistoryEntity.driverName.toString(),
-                          Icons.bike_scooter)
-                      : _iconWithTitle("  --", Icons.bike_scooter),
+                          FontAwesomeIcons.car)
+                      : _iconWithTitle("  --", FontAwesomeIcons.car),
                   _iconWithTitle(
                       "${widget.tripHistoryEntity.tripAmount}\u{20B9}",
                       Icons.credit_card_rounded),

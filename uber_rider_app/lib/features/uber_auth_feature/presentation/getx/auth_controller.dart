@@ -50,7 +50,7 @@ class UberAuthController extends GetxController {
     await uberAuthOtpVerificationUseCase.call(otp).whenComplete(() async {
       String riderId = await uberAuthGetUserUidUseCase.call();
       if (riderId.isNotEmpty) {
-        Get.closeCurrentSnackbar();
+        Get.closeAllSnackbars();
         final userStatus = await checkUserStatus();
         if (userStatus) {
           Get.offAll(() => const UberHomePage());
@@ -91,6 +91,7 @@ class UberAuthController extends GetxController {
     });
     final userStatus = await checkUserStatus();
     if (userStatus) {
+      Get.closeAllSnackbars();
       Get.snackbar("done", "registration successful!");
       Get.offAll(() => const UberHomePage());
     }

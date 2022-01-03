@@ -32,7 +32,7 @@ class TripHistoryModel extends TripHistoryEntity {
         //DateTime.parse(documentSnapshot.get('trip_date')),
         tripId: documentSnapshot.get('trip_id'),
         tripAmount: documentSnapshot.get('trip_amount'),
-        rating: documentSnapshot.get('rating'),
+        rating: double.parse(documentSnapshot.get('rating').toString()),
         driverId: documentSnapshot.get('driver_id'),
         riderId: documentSnapshot.get('rider_id'),
         isArrived: documentSnapshot.get('is_arrived'),

@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:uber_rider_app/features/uber_map_feature/domain/entities/uber_map_get_drivers_entity.dart';
 
 class DriverModel extends UberGetAvailableDriversEntity {
-  DriverModel(
+  const DriverModel(
       {final String? name,
       final bool? is_online,
       final DocumentReference? vehicle,
