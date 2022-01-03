@@ -14,7 +14,7 @@ class UberGetAvailableDriversEntity extends Equatable {
   final GeoPoint? currentLocation;
   final String? driverId;
 
-  UberGetAvailableDriversEntity(
+  const UberGetAvailableDriversEntity(
       {this.name,
       this.email,
       this.is_online,

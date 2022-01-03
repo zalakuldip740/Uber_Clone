@@ -14,9 +14,9 @@ class DriverDetails extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.all(15),
         margin: const EdgeInsets.symmetric(horizontal: 10),
-        decoration: BoxDecoration(
-            color: Colors.grey[200],
-            borderRadius: const BorderRadius.only(
+        decoration: const BoxDecoration(
+            color: Color(0xfff7f6fb),
+            borderRadius: BorderRadius.only(
                 topRight: Radius.circular(15), topLeft: Radius.circular(15))),
         child: Column(
           children: [
@@ -29,9 +29,10 @@ class DriverDetails extends StatelessWidget {
                       .req_accepted_driver_and_vehicle_data["profile_img"]
                       .toString()),
                 ),
-                const Text(
-                  "Driver Name : Vivek",
-                  style: TextStyle(fontWeight: FontWeight.w700),
+                Text(
+                  uberMapController.req_accepted_driver_and_vehicle_data["name"]
+                      .toString(),
+                  style: const TextStyle(fontWeight: FontWeight.w700),
                 ),
               ],
             ),
@@ -42,10 +43,9 @@ class DriverDetails extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 Text(
-                  "number :" +
-                      uberMapController.req_accepted_driver_and_vehicle_data[
-                              "vehicle_number_plate"]
-                          .toString(),
+                  uberMapController.req_accepted_driver_and_vehicle_data[
+                          "vehicle_number_plate"]
+                      .toString(),
                   style: const TextStyle(fontWeight: FontWeight.w500),
                 ),
                 Text(
@@ -71,7 +71,7 @@ class DriverDetails extends StatelessWidget {
                   style: const TextStyle(fontWeight: FontWeight.w500),
                 ),
                 Text(
-                  "manu.company :" +
+                  "company :" +
                       uberMapController.req_accepted_driver_and_vehicle_data[
                               "vehicle_company"]
                           .toString(),
@@ -83,6 +83,8 @@ class DriverDetails extends StatelessWidget {
               height: 10,
             ),
             ElevatedButton.icon(
+                style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.all(Colors.green)),
                 onPressed: () async {
                   String mobile = uberMapController
                       .req_accepted_driver_and_vehicle_data["mobile"]

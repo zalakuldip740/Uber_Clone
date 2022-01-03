@@ -52,15 +52,18 @@ class UberLiveTrackingController extends GetxController {
     vehicleTypeName.value = _uberTripsHistoryController
         .tripsHistory.value[index].vehicleType
         .toString();
-    final directionData = await uberMapDirectionUsecase.call(
-        position.latitude,
-        position.longitude,
-        _uberTripsHistoryController
-            .tripsHistory.value[index].destinationLocation!.latitude,
-        _uberTripsHistoryController
-            .tripsHistory.value[index].destinationLocation!.longitude);
-    uberMapDirectionData.value = directionData;
-    isLoading.value = false;
+    await uberMapDirectionUsecase
+        .call(
+            position.latitude,
+            position.longitude,
+            _uberTripsHistoryController
+                .tripsHistory.value[index].destinationLocation!.latitude,
+            _uberTripsHistoryController
+                .tripsHistory.value[index].destinationLocation!.longitude)
+        .then((directionData) {
+      uberMapDirectionData.value = directionData;
+      isLoading.value = false;
+    });
     addMarkers(
         BitmapDescriptor.fromBytes(await getBytesFromAsset(
             vehicleTypeName.value == "cars"

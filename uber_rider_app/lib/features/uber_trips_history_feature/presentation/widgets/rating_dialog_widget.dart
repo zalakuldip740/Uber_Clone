@@ -8,6 +8,7 @@ void showRatingAppDialog(
     TripHistoryEntity tripHistoryEntity,
     UberTripsHistoryController uberTripsHistoryController) {
   final _ratingDialog = RatingDialog(
+    starSize: 30,
     starColor: Colors.amber,
     title: Text(
       tripHistoryEntity.driverName.toString(),
