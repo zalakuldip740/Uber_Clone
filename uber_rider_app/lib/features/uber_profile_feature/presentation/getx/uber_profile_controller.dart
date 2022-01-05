@@ -63,7 +63,7 @@ class UberProfileController extends GetxController {
         riderData.value['wallet']);
     String riderId = await uberAuthGetUserUidUseCase.call();
     await uberProfileUpdateRiderUsecase.call(riderEntity, riderId);
-    Get.snackbar("Done", "Profile Updated!");
+    // Get.snackbar("Done", "Profile Updated!");
   }
 
   signOut() async {

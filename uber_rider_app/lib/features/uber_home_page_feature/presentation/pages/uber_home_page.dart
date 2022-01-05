@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -24,7 +22,6 @@ class UberHomePage extends StatefulWidget {
 }
 
 class _UberHomePageState extends State<UberHomePage> {
-  final Completer<GoogleMapController> _controller = Completer();
   final UberHomeController _uberHomeController =
       Get.put(di.sl<UberHomeController>());
 
@@ -126,7 +123,7 @@ class _UberHomePageState extends State<UberHomePage> {
                         zoomControlsEnabled: false,
                         zoomGesturesEnabled: true,
                         onMapCreated: (GoogleMapController controller) {
-                          _controller.complete(controller);
+                          //_uberHomeController.controller.complete(controller);
                           CameraPosition _newCameraPos = CameraPosition(
                             target: LatLng(_uberHomeController.currentLat.value,
                                 _uberHomeController.currentLng.value),

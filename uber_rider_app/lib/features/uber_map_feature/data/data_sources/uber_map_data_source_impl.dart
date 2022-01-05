@@ -146,6 +146,8 @@ class UberMapDataSourceImpl extends UberMapDataSource {
   @override
   Future<String> tripPayment(
       String riderId, String driverId, int tripAmount) async {
+    print(driverId);
+    print(riderId);
     var res = "".obs;
     var riderAmt = 0.obs;
     var driverAmt = 0.obs;

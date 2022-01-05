@@ -13,7 +13,9 @@ class UberTripHistoryRepositoryImpl extends UberTripHistoryRepository {
   }
 
   @override
-  Future<void> uberGiveTripRating(double rating, String tripId) async {
-    return await uberTripsHistoryDataSource.uberGiveTripRating(rating, tripId);
+  Future<void> uberGiveTripRating(
+      double rating, String tripId, String driverId) async {
+    return await uberTripsHistoryDataSource.uberGiveTripRating(
+        rating, tripId, driverId);
   }
 }

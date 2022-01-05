@@ -52,10 +52,14 @@ class _UberPaymentBottomSheetState extends State<UberPaymentBottomSheet> {
                   elevation: MaterialStateProperty.all(0.0),
                   padding: MaterialStateProperty.all(const EdgeInsets.all(15))),
               onPressed: () async {
-                String riderId =
-                    widget.tripHistoryEntity.riderId!.path.split('/').last;
-                String driverId =
-                    widget.tripHistoryEntity.driverId!.path.split('/').last;
+                String riderId = widget.tripHistoryEntity.riderId!.path
+                    .split('/')
+                    .last
+                    .trim();
+                String driverId = widget.tripHistoryEntity.driverId!.path
+                    .split('/')
+                    .last
+                    .trim();
                 int? tripAmount = widget.tripHistoryEntity.tripAmount;
                 String res = await _uberLiveTrackingController.makePayment(
                     riderId, driverId, tripAmount!);

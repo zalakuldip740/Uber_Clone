@@ -27,7 +27,7 @@ class UberTripsHistoryController extends GetxController {
     });
   }
 
-  giveTripRating(double rating, String tripId) async {
-    await uberGiveTripRatingUsecase.call(rating, tripId);
+  giveTripRating(double rating, String tripId, String driverId) async {
+    await uberGiveTripRatingUsecase.call(rating, tripId, driverId);
   }
 }

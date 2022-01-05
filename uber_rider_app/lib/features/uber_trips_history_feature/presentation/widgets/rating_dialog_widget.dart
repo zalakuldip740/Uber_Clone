@@ -31,7 +31,9 @@ void showRatingAppDialog(
     submitButtonText: 'Submit',
     onSubmitted: (response) {
       uberTripsHistoryController.giveTripRating(
-          response.rating, tripHistoryEntity.tripId.toString());
+          response.rating,
+          tripHistoryEntity.tripId.toString(),
+          tripHistoryEntity.driverId!.path.split('/').last.trim());
     },
   );
 
