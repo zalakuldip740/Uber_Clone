@@ -3,5 +3,6 @@ import 'package:uber_rider_app/features/uber_trips_history_feature/domain/entiti
 abstract class UberTripHistoryRepository {
   Stream<List<TripHistoryEntity>> uberGetTripHistory(String riderId);
 
-  Future<void> uberGiveTripRating(double rating, String tripId);
+  Future<void> uberGiveTripRating(
+      double rating, String tripId, String driverId);
 }

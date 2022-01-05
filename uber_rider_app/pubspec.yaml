@@ -33,26 +33,41 @@ dependencies:
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
+
+  # ui related packages
   cupertino_icons: ^1.0.4
-  font_awesome_flutter: ^9.2.0
-  google_maps_flutter: ^2.1.1
-  geolocator: ^8.0.1
-  geocoding: ^2.0.1
+  font_awesome_flutter: ^9.2.0  # icons
+  image_picker: ^0.8.4+4  # pic img from gallary
+  rating_dialog: ^2.0.3  # rating dialog
+  lottie: ^1.2.1    # animation
+
+  # maps related packages
+  google_maps_flutter: ^2.1.1  # map
+  geolocator: ^8.0.1   # current loc
+  geocoding: ^2.0.1   # place name to latlng
+  flutter_polyline_points: ^1.0.0   # polyline on map
+
+  # state management packages
   equatable: ^2.0.3
-  flutter_bloc: ^8.0.0
-  get_it: ^7.2.0
   get: ^4.6.1
+
+  # dependency injection
+  get_it: ^7.2.0
+
+  # Api call
   http: ^0.13.4
-  flutter_polyline_points: ^1.0.0
-  firebase_auth: ^3.3.3
-  cloud_firestore: ^3.1.4
-  firebase_storage: ^10.2.3
+
+  # Firebase packages
+  firebase_auth: ^3.3.4
+  cloud_firestore: ^3.1.5
+  firebase_storage: ^10.2.4
   firebase_core: ^1.10.6
-  lottie: ^1.2.1
-  flutter_phone_direct_caller: ^2.1.0 # for call
-  image_picker: ^0.8.4+4
-  rating_dialog: ^2.0.3
-  connectivity_plus: ^2.1.0  # connection check
+
+  # phone call
+  flutter_phone_direct_caller: ^2.1.0
+
+  # network connectivity
+  connectivity_plus: ^2.2.0
 
 dev_dependencies:
   flutter_test:

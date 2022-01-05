@@ -24,7 +24,12 @@ class UberProfileDataSourceImpl extends UberProfileDataSource {
   Future<void> updateRiderProfile(RiderModel riderModel, String riderId) async {
     final riderCollection = firestore.collection("riders");
     try {
-      riderCollection.doc(riderId).set(riderModel.toDocument());
+      riderCollection
+          .doc(riderId)
+          .set(riderModel.toDocument())
+          .whenComplete(() {
+        Get.snackbar("Done", "Profile Updated!");
+      });
     } on FirebaseException catch (e) {
       Get.snackbar("error", e.code.toString());
     }
