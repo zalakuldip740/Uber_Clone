@@ -32,7 +32,8 @@ class DriverDetails extends StatelessWidget {
                 Text(
                   uberMapController.req_accepted_driver_and_vehicle_data["name"]
                       .toString(),
-                  style: const TextStyle(fontWeight: FontWeight.w700),
+                  style: const TextStyle(
+                      fontWeight: FontWeight.w700, fontSize: 22),
                 ),
               ],
             ),
@@ -49,10 +50,9 @@ class DriverDetails extends StatelessWidget {
                   style: const TextStyle(fontWeight: FontWeight.w500),
                 ),
                 Text(
-                  "vehicle color :" +
-                      uberMapController
-                          .req_accepted_driver_and_vehicle_data["vehicle_color"]
-                          .toString(),
+                  uberMapController
+                      .req_accepted_driver_and_vehicle_data["vehicle_color"]
+                      .toString(),
                   style: const TextStyle(fontWeight: FontWeight.w500),
                 )
               ],
@@ -64,17 +64,15 @@ class DriverDetails extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 Text(
-                  "vehicle model :" +
-                      uberMapController
-                          .req_accepted_driver_and_vehicle_data["vehicle_model"]
-                          .toString(),
+                  uberMapController
+                      .req_accepted_driver_and_vehicle_data["vehicle_model"]
+                      .toString(),
                   style: const TextStyle(fontWeight: FontWeight.w500),
                 ),
                 Text(
-                  "company :" +
-                      uberMapController.req_accepted_driver_and_vehicle_data[
-                              "vehicle_company"]
-                          .toString(),
+                  uberMapController
+                      .req_accepted_driver_and_vehicle_data["vehicle_company"]
+                      .toString(),
                   style: const TextStyle(fontWeight: FontWeight.w500),
                 )
               ],

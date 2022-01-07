@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_phone_direct_caller/flutter_phone_direct_caller.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get_core/src/get_main.dart';
+import 'package:get/get_instance/src/extension_instance.dart';
 import 'package:get/get_navigation/src/extension_navigation.dart';
 import 'package:intl/intl.dart';
 import 'package:uber_rider_app/features/uber_map_feature/presentation/pages/uber_map_live_tracking_page.dart';
@@ -25,6 +27,7 @@ class TripHistoryTile extends StatefulWidget {
 }
 
 class _TripHistoryTileState extends State<TripHistoryTile> {
+  final UberTripsHistoryController _uberTripsHistoryController = Get.find();
   @override
   Widget build(BuildContext context) {
     return SizedBox(
@@ -74,6 +77,25 @@ class _TripHistoryTileState extends State<TripHistoryTile> {
                                         Colors.blueAccent),
                       ),
                     ),
+                    if (!widget.tripHistoryEntity.isArrived! &&
+                        widget.tripHistoryEntity.readyForTrip!)
+                      GestureDetector(
+                        onTap: () async {
+                          String driverId = widget
+                              .tripHistoryEntity.driverId!.path
+                              .split("/")
+                              .last
+                              .trim();
+                          String mobile = _uberTripsHistoryController
+                              .tripDrivers[driverId]!.mobile
+                              .toString();
+                          await FlutterPhoneDirectCaller.callNumber(mobile);
+                        },
+                        child: const Icon(
+                          Icons.call,
+                          color: Colors.green,
+                        ),
+                      ),
                     Row(
                       children: [
                         Text(DateFormat('dd-MM-yy hh:mm').format(DateTime.parse(
@@ -143,7 +165,16 @@ class _TripHistoryTileState extends State<TripHistoryTile> {
                       Icons.watch_later_outlined),
                   widget.tripHistoryEntity.driverId != null
                       ? _iconWithTitle(
-                          " " + widget.tripHistoryEntity.driverName.toString(),
+                          " " +
+                              widget
+                                  .uberTripsHistoryController
+                                  .tripDrivers
+                                  .value[widget.tripHistoryEntity.driverId!.path
+                                      .split("/")
+                                      .last
+                                      .trim()]!
+                                  .name
+                                  .toString(),
                           FontAwesomeIcons.car)
                       : _iconWithTitle("  --", FontAwesomeIcons.car),
                   _iconWithTitle(

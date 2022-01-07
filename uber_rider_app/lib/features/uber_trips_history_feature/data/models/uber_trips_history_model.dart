@@ -16,8 +16,7 @@ class TripHistoryModel extends TripHistoryEntity {
   final DocumentReference? driverId;
   final DocumentReference? riderId;
   final bool? isArrived;
-  final String? vehicleType;
-  final String? driverName;
+  final bool? readyForTrip;
 
   factory TripHistoryModel.fromSnapshot(DocumentSnapshot documentSnapshot) {
     return TripHistoryModel(
@@ -36,8 +35,7 @@ class TripHistoryModel extends TripHistoryEntity {
         driverId: documentSnapshot.get('driver_id'),
         riderId: documentSnapshot.get('rider_id'),
         isArrived: documentSnapshot.get('is_arrived'),
-        driverName: documentSnapshot.get('driver_name'),
-        vehicleType: documentSnapshot.get('vehicleType'));
+        readyForTrip: documentSnapshot.get('ready_for_trip'));
   }
 
   TripHistoryModel(
@@ -55,8 +53,7 @@ class TripHistoryModel extends TripHistoryEntity {
       required this.driverId,
       required this.riderId,
       required this.isArrived,
-      required this.driverName,
-      required this.vehicleType})
+      required this.readyForTrip})
       : super(
             source: source,
             destination: destination,
@@ -71,7 +68,6 @@ class TripHistoryModel extends TripHistoryEntity {
             tripAmount: tripAmount,
             driverId: driverId,
             isArrived: isArrived,
-            driverName: driverName,
-            vehicleType: vehicleType,
-            riderId: riderId);
+            riderId: riderId,
+            readyForTrip: readyForTrip);
 }

@@ -45,7 +45,7 @@ class UberMapController extends GetxController {
 
   RxDouble destinationLatitude = 0.0.obs;
   RxDouble destinationLongitude = 0.0.obs;
-  var availableDriversList = <UberGetAvailableDriversEntity>[].obs;
+  var availableDriversList = <UberDriverEntity>[].obs;
 
   // polyline
   var polylineCoordinates = <LatLng>[].obs;
@@ -142,10 +142,11 @@ class UberMapController extends GetxController {
     uberMapDirectionData.value = directionData;
 
     // get drivers
-    Stream<List<UberGetAvailableDriversEntity>> availableDriversData =
+    Stream<List<UberDriverEntity>> availableDriversData =
         uberMapGetDriversUsecase.call();
     availableDriversList.clear();
     availableDriversData.listen((driverData) async {
+      availableDriversList.clear();
       for (int i = 0; i < driverData.length; i++) {
         if (Geolocator.distanceBetween(
                 sourceLatitude.value,
@@ -239,12 +240,12 @@ class UberMapController extends GetxController {
     final GoogleMapController _controller = await controller.future;
     CameraPosition newPos = CameraPosition(
       target: LatLng(lat, lng),
-      zoom: 15,
+      zoom: 11,
     );
     _controller.animateCamera(CameraUpdate.newCameraPosition(newPos));
   }
 
-  generateTrip(UberGetAvailableDriversEntity driverData) async {
+  generateTrip(UberDriverEntity driverData, int index) async {
     String vehicleType = driverData.vehicle!.path.split('/').first;
     String driverId = driverData.driverId.toString();
     String riderId = await uberAuthGetUserUidUseCase.call();
@@ -271,7 +272,7 @@ class UberMapController extends GetxController {
                 ? autoRent.value
                 : bikeRent.value,
         false,
-        driverData.name.toString(),
+        driverData.name,
         vehicleType);
     Stream reqStatusData = uberMapGenerateTripUseCase.call(generateTripModel);
     findDriverLoading.value = true;
@@ -303,11 +304,13 @@ class UberMapController extends GetxController {
         reqAccepted.value = true;
       } else if (data.data()['is_arrived'] && !data.data()['is_completed']) {
         Get.snackbar(
-            "driver arrived!", "Now you can track from tripHistory page!");
+            "driver arrived!", "Now you can track from tripHistory page!",
+            duration: const Duration(seconds: 5));
       }
       Timer(const Duration(seconds: 45), () {
         if (reqStatus == false && findDriverLoading.value) {
           uberCancelTripUseCase.call(data.data()['trip_id']);
+          // availableDriversList.value.removeAt(index);
           Get.snackbar(
               "Sorry !", "request denied by driver,please choose other driver",
               snackPosition: SnackPosition.BOTTOM);

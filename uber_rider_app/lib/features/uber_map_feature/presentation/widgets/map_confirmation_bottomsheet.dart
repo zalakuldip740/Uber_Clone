@@ -144,7 +144,8 @@ class MapConfirmationBottomSheet extends StatelessWidget {
                                 onTap: () {
                                   _uberMapController.generateTrip(
                                       _uberMapController
-                                          .availableDriversList.value[index]);
+                                          .availableDriversList.value[index],
+                                      index);
                                 },
                               ),
                             );

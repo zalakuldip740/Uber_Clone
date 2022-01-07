@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
 
-class UberGetAvailableDriversEntity extends Equatable {
+class UberDriverEntity extends Equatable {
   final String? name;
   final String? email;
   final bool? is_online;
@@ -14,7 +14,7 @@ class UberGetAvailableDriversEntity extends Equatable {
   final GeoPoint? currentLocation;
   final String? driverId;
 
-  const UberGetAvailableDriversEntity(
+  const UberDriverEntity(
       {this.name,
       this.email,
       this.is_online,

@@ -13,7 +13,6 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:uber_rider_app/features/uber_map_feature/domain/entities/uber_map_direction_entity.dart';
 import 'package:uber_rider_app/features/uber_map_feature/domain/use_cases/uber_map_direction_usecase.dart';
 import 'package:uber_rider_app/features/uber_map_feature/domain/use_cases/uber_trip_payment_usecase.dart';
-import 'package:uber_rider_app/features/uber_map_feature/presentation/widgets/uber_payment_bottom_sheet_widget.dart';
 import 'package:uber_rider_app/features/uber_trips_history_feature/presentation/getx/uber_trip_history_controller.dart';
 
 class UberLiveTrackingController extends GetxController {
@@ -28,6 +27,9 @@ class UberLiveTrackingController extends GetxController {
   var uberMapDirectionData = <UberMapDirectionEntity>[].obs;
   var isLoading = true.obs;
   var markers = <Marker>[].obs;
+
+  var isPaymentBottomSheetOpen = false.obs;
+  var isPaymentDone = false.obs;
 
   var polylineCoordinates = <LatLng>[].obs;
   PolylinePoints polylinePoints = PolylinePoints();
@@ -45,13 +47,20 @@ class UberLiveTrackingController extends GetxController {
     Position position = await Geolocator.getCurrentPosition();
     liveLocLatitude.value = position.latitude;
     liveLocLongitude.value = position.longitude;
+    final driverId = _uberTripsHistoryController
+        .tripsHistory.value[index].driverId!.path
+        .split("/")
+        .last
+        .trim();
     destinationLat.value = _uberTripsHistoryController
         .tripsHistory.value[index].destinationLocation!.latitude;
     destinationLng.value = _uberTripsHistoryController
         .tripsHistory.value[index].destinationLocation!.longitude;
     vehicleTypeName.value = _uberTripsHistoryController
-        .tripsHistory.value[index].vehicleType
-        .toString();
+        .tripDrivers.value[driverId]!.vehicle!.path
+        .split("/")
+        .first
+        .trim();
     await uberMapDirectionUsecase
         .call(
             position.latitude,
@@ -104,19 +113,25 @@ class UberLiveTrackingController extends GetxController {
     bool? isCompleted =
         _uberTripsHistoryController.tripsHistory.value[index].isCompleted;
     if (isCompleted == true) {
-      Get.bottomSheet(
-          SizedBox(
-              height: 300,
-              child: UberPaymentBottomSheet(
-                  tripHistoryEntity:
-                      _uberTripsHistoryController.tripsHistory.value[index])),
-          isDismissible: false,
-          enableDrag: false);
+      isPaymentBottomSheetOpen.value = true;
+      // Get.bottomSheet(
+      //     SizedBox(
+      //         height: 300,
+      //         child: UberPaymentBottomSheet(
+      //             tripHistoryEntity:
+      //                 _uberTripsHistoryController.tripsHistory.value[index])),
+      //     isDismissible: false,
+      //     enableDrag: false);
     }
   }
 
   makePayment(String riderId, String driverId, int tripAmount) async {
-    return await uberTripPaymentUseCase.call(riderId, driverId, tripAmount);
+    String res =
+        await uberTripPaymentUseCase.call(riderId, driverId, tripAmount);
+    if (res == "done") {
+      isPaymentDone.value = true;
+    }
+    return res;
   }
 
   addMarkers(icon, String markerId, double lat, double lng) async {

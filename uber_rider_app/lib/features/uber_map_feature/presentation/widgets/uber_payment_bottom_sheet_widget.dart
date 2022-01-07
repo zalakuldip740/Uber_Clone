@@ -64,7 +64,6 @@ class _UberPaymentBottomSheetState extends State<UberPaymentBottomSheet> {
                 String res = await _uberLiveTrackingController.makePayment(
                     riderId, driverId, tripAmount!);
                 if (res == "done") {
-                  Get.back();
                   showRatingAppDialog(context, widget.tripHistoryEntity,
                       _uberTripsHistoryController);
                 } else {
@@ -80,7 +79,7 @@ class _UberPaymentBottomSheetState extends State<UberPaymentBottomSheet> {
                 }
               },
               child: Text(
-                "Pay \u{20B9}${widget.tripHistoryEntity.tripAmount} to ${widget.tripHistoryEntity.driverName}",
+                "Pay \u{20B9}${widget.tripHistoryEntity.tripAmount}",
                 style: const TextStyle(fontSize: 18),
               ),
             ),
@@ -105,7 +104,7 @@ class _UberPaymentBottomSheetState extends State<UberPaymentBottomSheet> {
                     _uberTripsHistoryController);
               },
               child: Text(
-                "Pay \u{20B9}${widget.tripHistoryEntity.tripAmount} cash to ${widget.tripHistoryEntity.driverName}",
+                "Pay \u{20B9}${widget.tripHistoryEntity.tripAmount} cash",
                 style: const TextStyle(fontSize: 18),
               ),
             )
