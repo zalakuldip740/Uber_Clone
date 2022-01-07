@@ -7,24 +7,26 @@ void showRatingAppDialog(
     BuildContext context,
     TripHistoryEntity tripHistoryEntity,
     UberTripsHistoryController uberTripsHistoryController) {
+  final driverId = tripHistoryEntity.driverId!.path.split('/').last.trim();
   final _ratingDialog = RatingDialog(
     starSize: 30,
     starColor: Colors.amber,
     title: Text(
-      tripHistoryEntity.driverName.toString(),
+      uberTripsHistoryController.tripDrivers.value[driverId]!.name.toString(),
       textAlign: TextAlign.center,
     ),
     message: const Text(
       'Rate Your Journey',
       textAlign: TextAlign.center,
     ),
-    image: const CircleAvatar(
+    image: CircleAvatar(
       radius: 42,
       backgroundColor: Colors.black,
       child: CircleAvatar(
         backgroundColor: Colors.white,
-        backgroundImage: NetworkImage(
-            "https://images.unsplash.com/profile-1533651674518-3723fed8d396?dpr=1&auto=format&fit=crop&w=150&h=150&q=60&crop=faces&bg=fff"),
+        backgroundImage: NetworkImage(uberTripsHistoryController
+            .tripDrivers.value[driverId]!.profile_img
+            .toString()),
         radius: 40,
       ),
     ),

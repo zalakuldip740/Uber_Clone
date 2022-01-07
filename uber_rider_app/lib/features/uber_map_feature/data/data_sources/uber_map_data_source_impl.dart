@@ -146,8 +146,6 @@ class UberMapDataSourceImpl extends UberMapDataSource {
   @override
   Future<String> tripPayment(
       String riderId, String driverId, int tripAmount) async {
-    print(driverId);
-    print(riderId);
     var res = "".obs;
     var riderAmt = 0.obs;
     var driverAmt = 0.obs;
@@ -155,7 +153,7 @@ class UberMapDataSourceImpl extends UberMapDataSource {
       riderAmt.value = value.get('wallet');
     }).whenComplete(() async {
       await firestore.collection("drivers").doc(driverId).get().then((value) {
-        driverAmt.value = value.get('wallet');
+        driverAmt.value = value.get('wallet').round();
       });
     }).whenComplete(() async {
       if (riderAmt.value < tripAmount) {

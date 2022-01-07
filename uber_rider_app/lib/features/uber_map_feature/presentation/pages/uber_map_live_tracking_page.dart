@@ -6,6 +6,7 @@ import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:lottie/lottie.dart' as lottie;
 import 'package:uber_rider_app/features/uber_map_feature/presentation/getx/uber_live_tracking_controller.dart';
+import 'package:uber_rider_app/features/uber_map_feature/presentation/widgets/uber_payment_bottom_sheet_widget.dart';
 import 'package:uber_rider_app/features/uber_trips_history_feature/presentation/getx/uber_trip_history_controller.dart';
 import 'package:uber_rider_app/injection_container.dart' as di;
 
@@ -41,6 +42,7 @@ class _UberMapLiveTrackingPageState extends State<UberMapLiveTrackingPage> {
   Widget build(BuildContext context) {
     return Obx(
       () => Scaffold(
+        resizeToAvoidBottomInset: true,
         body: _uberLiveTrackingController.isLoading.value
             ? Center(
                 child: lottie.Lottie.network(
@@ -153,6 +155,21 @@ class _UberMapLiveTrackingPageState extends State<UberMapLiveTrackingPage> {
                         ],
                       ),
                     ),
+                  ),
+                  Visibility(
+                    visible: _uberLiveTrackingController
+                            .isPaymentBottomSheetOpen.value &&
+                        !_uberLiveTrackingController.isPaymentDone.value,
+                    child: Positioned(
+                        left: 15,
+                        right: 15,
+                        bottom: 0,
+                        child: SizedBox(
+                          height: 300,
+                          child: UberPaymentBottomSheet(
+                              tripHistoryEntity: _uberTripsHistoryController
+                                  .tripsHistory.value[widget.index]),
+                        )),
                   )
                 ],
               ),

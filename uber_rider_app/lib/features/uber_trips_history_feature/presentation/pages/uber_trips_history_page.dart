@@ -30,6 +30,7 @@ class _TripHistoryState extends State<TripHistory> {
       appBar: AppBar(
         backgroundColor: Colors.black,
         title: const Text("Your Trips"),
+        elevation: 0.0,
       ),
       body: Obx(
         () => Padding(

@@ -37,6 +37,7 @@ import 'package:uber_rider_app/features/uber_profile_feature/presentation/getx/u
 import 'package:uber_rider_app/features/uber_trips_history_feature/data/data_sources/uber_trips_history_data_source.dart';
 import 'package:uber_rider_app/features/uber_trips_history_feature/data/repositories/uber_trips_history_repository_impl.dart';
 import 'package:uber_rider_app/features/uber_trips_history_feature/domain/repositories/uber_trips_history_repository.dart';
+import 'package:uber_rider_app/features/uber_trips_history_feature/domain/use_cases/uber_get_trip_driver_usecase.dart';
 import 'package:uber_rider_app/features/uber_trips_history_feature/domain/use_cases/uber_get_trip_history_usecase.dart';
 import 'package:uber_rider_app/features/uber_trips_history_feature/domain/use_cases/uber_give_trip_rating_usecase.dart';
 import 'package:uber_rider_app/features/uber_trips_history_feature/presentation/getx/uber_trip_history_controller.dart';
@@ -56,10 +57,10 @@ import 'features/uber_trips_history_feature/data/data_sources/uber_trips_history
 final sl = GetIt.instance;
 
 Future<void> init() async {
-
   //network getx
 
-  sl.registerFactory<UberNetWorkStatusChecker>(() => UberNetWorkStatusChecker());
+  sl.registerFactory<UberNetWorkStatusChecker>(
+      () => UberNetWorkStatusChecker());
   // feature:- current location
   //getx
   sl.registerFactory<UberHomeController>(
@@ -200,7 +201,8 @@ Future<void> init() async {
       UberTripsHistoryController(
           uberGetTripHistoryUsecase: sl.call(),
           uberGiveTripRatingUsecase: sl.call(),
-          uberAuthGetUserUidUseCase: sl.call()));
+          uberAuthGetUserUidUseCase: sl.call(),
+          uberGetTripDriverUsecase: sl.call()));
 
   //usecase
 
@@ -208,6 +210,8 @@ Future<void> init() async {
       () => UberGetTripHistoryUsecase(uberTripHistoryRepository: sl.call()));
   sl.registerLazySingleton<UberGiveTripRatingUsecase>(
       () => UberGiveTripRatingUsecase(uberTripHistoryRepository: sl.call()));
+  sl.registerLazySingleton<UberGetTripDriverUsecase>(
+      () => UberGetTripDriverUsecase(uberTripHistoryRepository: sl.call()));
 
   //repository
 

@@ -32,8 +32,8 @@ uberHomeTopShareLocationCardWidget(UberHomeController uberHomeController) {
               height: 10,
             ),
             GestureDetector(
-              onTap: () async {
-                await uberHomeController.getUserCurrentLocation();
+              onTap: () {
+                uberHomeController.getUserCurrentLocation();
               },
               child: Row(
                 children: const [

@@ -11,7 +11,7 @@ abstract class UberMapRepository {
   Future<List<UberMapDirectionEntity>> getUberMapDirection(double sourceLat,
       double sourceLng, double destinationLat, double destinationLng);
 
-  Stream<List<UberGetAvailableDriversEntity>> getAvailableDrivers();
+  Stream<List<UberDriverEntity>> getAvailableDrivers();
   Future<RentalChargeModel> getRentalChargeForVehicle(double kms);
   Stream generateTrip(GenerateTripModel generateTripModel);
   Future<VehicleModel> getVehicleDetails(String vehicleType, String driverId);
