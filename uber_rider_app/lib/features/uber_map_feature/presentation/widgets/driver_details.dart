@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_phone_direct_caller/flutter_phone_direct_caller.dart';
 import 'package:uber_rider_app/features/uber_map_feature/presentation/getx/uber_map_controller.dart';
@@ -16,25 +17,56 @@ class DriverDetails extends StatelessWidget {
         margin: const EdgeInsets.symmetric(horizontal: 10),
         decoration: const BoxDecoration(
             color: Color(0xfff7f6fb),
-            borderRadius: BorderRadius.only(
-                topRight: Radius.circular(15), topLeft: Radius.circular(15))),
+            borderRadius: BorderRadius.all(Radius.circular(15))),
         child: Column(
           children: [
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 CircleAvatar(
-                  radius: 35,
+                  radius: 32,
                   backgroundImage: NetworkImage(uberMapController
                       .req_accepted_driver_and_vehicle_data["profile_img"]
                       .toString()),
                 ),
-                Text(
-                  uberMapController.req_accepted_driver_and_vehicle_data["name"]
-                      .toString(),
-                  style: const TextStyle(
-                      fontWeight: FontWeight.w700, fontSize: 22),
+                Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      uberMapController
+                          .req_accepted_driver_and_vehicle_data["name"]
+                          .toString(),
+                      style: const TextStyle(
+                          fontWeight: FontWeight.w700, fontSize: 20),
+                    ),
+                    const SizedBox(height: 10),
+                    Text(
+                      uberMapController.req_accepted_driver_and_vehicle_data[
+                                  "overall_rating"]
+                              .toString() +
+                          " ⭐",
+                      style: const TextStyle(
+                          fontWeight: FontWeight.w700,
+                          fontSize: 18,
+                          color: Colors.blueAccent),
+                    )
+                  ],
                 ),
+                GestureDetector(
+                  onTap: () async {
+                    String mobile = uberMapController
+                        .req_accepted_driver_and_vehicle_data["mobile"]
+                        .toString();
+                    await FlutterPhoneDirectCaller.callNumber(mobile);
+                  },
+                  child: const CircleAvatar(
+                    radius: 25,
+                    backgroundColor: Colors.green,
+                    foregroundColor: Colors.white,
+                    child: Icon(Icons.call),
+                  ),
+                )
               ],
             ),
             const SizedBox(
@@ -50,9 +82,10 @@ class DriverDetails extends StatelessWidget {
                   style: const TextStyle(fontWeight: FontWeight.w500),
                 ),
                 Text(
-                  uberMapController
-                      .req_accepted_driver_and_vehicle_data["vehicle_color"]
-                      .toString(),
+                  "vehicle color :" +
+                      uberMapController
+                          .req_accepted_driver_and_vehicle_data["vehicle_color"]
+                          .toString(),
                   style: const TextStyle(fontWeight: FontWeight.w500),
                 )
               ],
@@ -64,33 +97,21 @@ class DriverDetails extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 Text(
-                  uberMapController
-                      .req_accepted_driver_and_vehicle_data["vehicle_model"]
-                      .toString(),
+                  "vehicle model :" +
+                      uberMapController
+                          .req_accepted_driver_and_vehicle_data["vehicle_model"]
+                          .toString(),
                   style: const TextStyle(fontWeight: FontWeight.w500),
                 ),
                 Text(
-                  uberMapController
-                      .req_accepted_driver_and_vehicle_data["vehicle_company"]
-                      .toString(),
+                  "company :" +
+                      uberMapController.req_accepted_driver_and_vehicle_data[
+                              "vehicle_company"]
+                          .toString(),
                   style: const TextStyle(fontWeight: FontWeight.w500),
                 )
               ],
             ),
-            const SizedBox(
-              height: 10,
-            ),
-            ElevatedButton.icon(
-                style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.all(Colors.green)),
-                onPressed: () async {
-                  String mobile = uberMapController
-                      .req_accepted_driver_and_vehicle_data["mobile"]
-                      .toString();
-                  await FlutterPhoneDirectCaller.callNumber(mobile);
-                },
-                icon: const Icon(Icons.call),
-                label: const Text("Call Driver"))
           ],
         ),
       ),

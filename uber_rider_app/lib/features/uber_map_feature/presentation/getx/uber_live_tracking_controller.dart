@@ -130,6 +130,7 @@ class UberLiveTrackingController extends GetxController {
         await uberTripPaymentUseCase.call(riderId, driverId, tripAmount);
     if (res == "done") {
       isPaymentDone.value = true;
+      Get.snackbar('Done', "Payment successful");
     }
     return res;
   }

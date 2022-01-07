@@ -173,29 +173,32 @@ class _UberMapLiveTrackingPageState extends State<UberMapLiveTrackingPage> {
                   )
                 ],
               ),
-        floatingActionButton: GestureDetector(
-          onTap: () {
-            _uberLiveTrackingController.getDirectionData(widget.index);
-          },
-          child: Container(
-              width: 120,
-              decoration: const BoxDecoration(
-                  borderRadius: BorderRadius.all(Radius.circular(25)),
-                  color: Colors.black),
-              padding: const EdgeInsets.all(10),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: const [
-                  Icon(Icons.refresh, color: Colors.white),
-                  Text(
-                    "Refresh",
-                    style: TextStyle(
-                        fontWeight: FontWeight.w600,
-                        fontSize: 18,
-                        color: Colors.white),
-                  ),
-                ],
-              )),
+        floatingActionButton: Visibility(
+          visible: !_uberLiveTrackingController.isPaymentBottomSheetOpen.value,
+          child: GestureDetector(
+            onTap: () {
+              _uberLiveTrackingController.getDirectionData(widget.index);
+            },
+            child: Container(
+                width: 120,
+                decoration: const BoxDecoration(
+                    borderRadius: BorderRadius.all(Radius.circular(25)),
+                    color: Colors.black),
+                padding: const EdgeInsets.all(10),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: const [
+                    Icon(Icons.refresh, color: Colors.white),
+                    Text(
+                      "Refresh",
+                      style: TextStyle(
+                          fontWeight: FontWeight.w600,
+                          fontSize: 18,
+                          color: Colors.white),
+                    ),
+                  ],
+                )),
+          ),
         ),
       ),
     );

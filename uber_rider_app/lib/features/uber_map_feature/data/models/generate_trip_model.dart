@@ -16,8 +16,6 @@ class GenerateTripModel extends Equatable {
   final bool? readyForTrip;
   final int? tripAmount;
   final bool? isArrived;
-  final String? driverName;
-  final String? vehicleType;
 
   const GenerateTripModel(
       this.source,
@@ -33,9 +31,7 @@ class GenerateTripModel extends Equatable {
       this.rating,
       this.readyForTrip,
       this.tripAmount,
-      this.isArrived,
-      this.driverName,
-      this.vehicleType);
+      this.isArrived);
 
   @override
   // TODO: implement props
@@ -53,8 +49,6 @@ class GenerateTripModel extends Equatable {
         rating,
         readyForTrip,
         tripAmount,
-        isArrived,
-        driverName,
-        vehicleType
+        isArrived
       ];
 }

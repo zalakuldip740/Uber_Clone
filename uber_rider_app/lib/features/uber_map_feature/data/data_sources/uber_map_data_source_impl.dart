@@ -114,9 +114,7 @@ class UberMapDataSourceImpl extends UberMapDataSource {
       'travelling_time': generateTripModel.travellingTime,
       'ready_for_trip': generateTripModel.readyForTrip,
       'trip_amount': generateTripModel.tripAmount,
-      'is_arrived': generateTripModel.isArrived,
-      'driver_name': generateTripModel.driverName,
-      'vehicleType': generateTripModel.vehicleType
+      'is_arrived': generateTripModel.isArrived
     });
 
     return genarateTripCollection.doc(docId).snapshots();

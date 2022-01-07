@@ -6,7 +6,7 @@
         android:label="Uber"
         android:icon="@mipmap/ic_launcher">
        <meta-data android:name="com.google.android.geo.API_KEY"
-           android:value="AIzaSyCKUcSfnm3_IgeOt8uBHilkRurjIHUKCvw"/>
+           android:value="YOUR API KEY"/>
         <activity
             android:name=".MainActivity"
             android:launchMode="singleTop"
