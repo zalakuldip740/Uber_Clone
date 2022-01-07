@@ -23,6 +23,7 @@ import 'package:uber_rider_app/features/uber_map_feature/domain/use_cases/uber_m
 import 'package:uber_rider_app/features/uber_map_feature/domain/use_cases/uber_map_get_drivers_usecase.dart';
 import 'package:uber_rider_app/features/uber_map_feature/domain/use_cases/uber_map_prediction_usecase.dart';
 import 'package:uber_rider_app/features/uber_map_feature/domain/use_cases/vehicle_details_usecase.dart';
+import 'package:uber_rider_app/features/uber_trips_history_feature/presentation/pages/uber_trips_history_page.dart';
 
 class UberMapController extends GetxController {
   final UberMapPredictionUsecase uberMapPredictionUsecase;
@@ -225,6 +226,7 @@ class UberMapController extends GetxController {
   }
 
   animateCameraPolyline() async {
+    animateCamera(sourceLatitude.value, sourceLongitude.value);
     final GoogleMapController _controller = await controller.future;
 
     _controller.animateCamera(CameraUpdate.newLatLngBounds(
@@ -271,9 +273,7 @@ class UberMapController extends GetxController {
             : vehicleType == 'auto'
                 ? autoRent.value
                 : bikeRent.value,
-        false,
-        driverData.name,
-        vehicleType);
+        false);
     Stream reqStatusData = uberMapGenerateTripUseCase.call(generateTripModel);
     findDriverLoading.value = true;
     reqStatusData.listen((data) async {
@@ -296,6 +296,8 @@ class UberMapController extends GetxController {
             req_accepted_driver_vehicle_data.numberPlate.toString();
         req_accepted_driver_and_vehicle_data["profile_img"] =
             driverData.profile_img.toString();
+        req_accepted_driver_and_vehicle_data["overall_rating"] =
+            driverData.overall_rating.toString();
         findDriverLoading.value = false;
         Get.snackbar(
           "Yahoo!",
@@ -305,7 +307,9 @@ class UberMapController extends GetxController {
       } else if (data.data()['is_arrived'] && !data.data()['is_completed']) {
         Get.snackbar(
             "driver arrived!", "Now you can track from tripHistory page!",
-            duration: const Duration(seconds: 5));
+            duration: const Duration(seconds: 5),
+            snackPosition: SnackPosition.BOTTOM);
+        Get.off(() => const TripHistory());
       }
       Timer(const Duration(seconds: 45), () {
         if (reqStatus == false && findDriverLoading.value) {

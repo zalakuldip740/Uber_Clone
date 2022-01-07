@@ -8,6 +8,7 @@ import 'package:uber_rider_app/features/uber_profile_feature/presentation/getx/u
 import 'package:uber_rider_app/features/uber_profile_feature/presentation/widgets/uber_add_money_dialog_widget.dart';
 import 'package:uber_rider_app/features/uber_trips_history_feature/domain/entities/uber_trips_history_entity.dart';
 import 'package:uber_rider_app/features/uber_trips_history_feature/presentation/getx/uber_trip_history_controller.dart';
+import 'package:uber_rider_app/features/uber_trips_history_feature/presentation/pages/uber_trips_history_page.dart';
 import 'package:uber_rider_app/features/uber_trips_history_feature/presentation/widgets/rating_dialog_widget.dart';
 import 'package:uber_rider_app/injection_container.dart' as di;
 
@@ -64,6 +65,7 @@ class _UberPaymentBottomSheetState extends State<UberPaymentBottomSheet> {
                 String res = await _uberLiveTrackingController.makePayment(
                     riderId, driverId, tripAmount!);
                 if (res == "done") {
+                  Get.off(() => const TripHistory());
                   showRatingAppDialog(context, widget.tripHistoryEntity,
                       _uberTripsHistoryController);
                 } else {

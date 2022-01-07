@@ -137,10 +137,12 @@ class MapConfirmationBottomSheet extends StatelessWidget {
                                         : Text('₹ ' +
                                             _uberMapController.bikeRent.value
                                                 .toString()),
-                                trailing: Text("rating: " +
-                                    _uberMapController.availableDriversList
-                                        .value[index].overall_rating
-                                        .toString()),
+                                trailing: Text(_uberMapController
+                                        .availableDriversList
+                                        .value[index]
+                                        .overall_rating
+                                        .toString() +
+                                    " ⭐"),
                                 onTap: () {
                                   _uberMapController.generateTrip(
                                       _uberMapController
