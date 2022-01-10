@@ -1,7 +1,7 @@
 # Uber Driver App
 
 ## Uber Driver app can be used by driver to : 
-```
+
 - Find new rides 
 
 - Accept a ride 
@@ -13,4 +13,4 @@
 - Show trip summary with distance travelled 
 
 - Receiving tips, ratings and confirmation of payment. 
-```
+
