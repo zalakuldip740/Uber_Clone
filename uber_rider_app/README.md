@@ -1,16 +1,18 @@
-# uber_rider_app
+# Uber Rider App
 
-uber rider app
+## Uber Rider app can be used by customer to : 
 
-## Getting Started
+- Allow customer to select pickup and dropoff location 
 
-This project is a starting point for a Flutter application.
+- Book or schedule  a ride from desired pickup and dropoff location 
 
-A few resources to get you started if this is your first Flutter project:
+- Track driver to customer's pickup location 
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
+- Track the ongoing ride to dropoff location 
 
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+- Show trip summary with distance travelled 
+
+- Saves trip for future reference 
+
+- Various payment methods are allowed including cash payment. 
+
