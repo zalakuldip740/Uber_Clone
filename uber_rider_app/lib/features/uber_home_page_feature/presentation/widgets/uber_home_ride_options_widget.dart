@@ -1,22 +1,26 @@
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 uberHomeRiderOptionsWidget() {
   return Row(
     mainAxisAlignment: MainAxisAlignment.spaceAround,
     children: [
       Container(
-        padding: const EdgeInsets.all(22),
+        padding: const EdgeInsets.all(8),
         decoration: BoxDecoration(
             borderRadius: const BorderRadius.all(Radius.circular(12)),
             color: Colors.grey[100]),
         child: Column(
-          children: const [
-            FaIcon(FontAwesomeIcons.car),
-            SizedBox(
-              height: 5,
+          children: [
+            //FaIcon(FontAwesomeIcons.car),
+            Image.asset(
+              "assets/home_car.png",
+              width: 80,
+              height: 80,
             ),
-            Text(
+            // const SizedBox(
+            //   height: 5,
+            // ),
+            const Text(
               "   Ride   ",
               style: TextStyle(fontWeight: FontWeight.w600),
             )
@@ -24,17 +28,22 @@ uberHomeRiderOptionsWidget() {
         ),
       ),
       Container(
-        padding: const EdgeInsets.all(22),
+        padding: const EdgeInsets.all(8),
         decoration: BoxDecoration(
             borderRadius: const BorderRadius.all(Radius.circular(12)),
             color: Colors.grey[100]),
         child: Column(
-          children: const [
-            FaIcon(FontAwesomeIcons.car),
-            SizedBox(
-              height: 5,
+          children: [
+            Image.asset(
+              "assets/home_car.png",
+              width: 80,
+              height: 80,
             ),
-            Text(
+            //FaIcon(FontAwesomeIcons.car),
+            // const SizedBox(
+            //   height: 5,
+            // ),
+            const Text(
               "Rentals",
               style: TextStyle(fontWeight: FontWeight.w600),
             )
@@ -42,17 +51,22 @@ uberHomeRiderOptionsWidget() {
         ),
       ),
       Container(
-        padding: const EdgeInsets.all(22),
+        padding: const EdgeInsets.all(8),
         decoration: BoxDecoration(
             borderRadius: const BorderRadius.all(Radius.circular(12)),
             color: Colors.grey[100]),
         child: Column(
-          children: const [
-            FaIcon(FontAwesomeIcons.car),
-            SizedBox(
-              height: 5,
+          children: [
+            Image.asset(
+              "assets/home_car.png",
+              width: 80,
+              height: 80,
             ),
-            Text(
+            // FaIcon(FontAwesomeIcons.car),
+            // const SizedBox(
+            //   height: 5,
+            // ),
+            const Text(
               "Intercity",
               style: TextStyle(fontWeight: FontWeight.w600),
             )
