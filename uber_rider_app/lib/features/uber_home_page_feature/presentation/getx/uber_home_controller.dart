@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
@@ -34,7 +33,6 @@ class UberHomeController extends GetxController {
         Get.snackbar(
           "Alert",
           "Location permissions are denied",
-          backgroundColor: Colors.redAccent,
           snackPosition: SnackPosition.BOTTOM,
         );
       }
@@ -42,7 +40,6 @@ class UberHomeController extends GetxController {
       Get.snackbar(
         "Alert",
         "Location permissions are permanently denied,please enable it from app setting",
-        backgroundColor: Colors.redAccent,
         snackPosition: SnackPosition.BOTTOM,
       );
     } else {

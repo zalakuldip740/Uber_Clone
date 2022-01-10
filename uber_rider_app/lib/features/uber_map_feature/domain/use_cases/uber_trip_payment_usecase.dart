@@ -5,7 +5,9 @@ class UberTripPaymentUseCase {
 
   UberTripPaymentUseCase({required this.uberMapRepository});
 
-  Future<String> call(String riderId, String driverId, int tripAmount) async {
-    return await uberMapRepository.tripPayment(riderId, driverId, tripAmount);
+  Future<String> call(
+      String riderId, String driverId, int tripAmount, String tripId) async {
+    return await uberMapRepository.tripPayment(
+        riderId, driverId, tripAmount, tripId);
   }
 }

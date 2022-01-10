@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:get/get_core/src/get_main.dart';
+import 'package:get/get_navigation/src/extension_navigation.dart';
 import 'package:rating_dialog/rating_dialog.dart';
+import 'package:uber_rider_app/features/uber_home_page_feature/presentation/pages/uber_home_page.dart';
 import 'package:uber_rider_app/features/uber_trips_history_feature/domain/entities/uber_trips_history_entity.dart';
 import 'package:uber_rider_app/features/uber_trips_history_feature/presentation/getx/uber_trip_history_controller.dart';
 
@@ -36,6 +39,7 @@ void showRatingAppDialog(
           response.rating,
           tripHistoryEntity.tripId.toString(),
           tripHistoryEntity.driverId!.path.split('/').last.trim());
+      Get.offAll(() => const UberHomePage());
     },
   );
 

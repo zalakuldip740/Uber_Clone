@@ -26,16 +26,23 @@ class MapConfirmationBottomSheet extends StatelessWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                  Text(
-                    _uberMapController.sourcePlaceName.value.toString(),
-                    style: const TextStyle(
-                        fontWeight: FontWeight.w700, fontSize: 25),
+                  Flexible(
+                    child: Text(
+                      _uberMapController.sourcePlaceName.value.toString(),
+                      style: const TextStyle(
+                          fontWeight: FontWeight.w700, fontSize: 25),
+                      overflow: TextOverflow.ellipsis,
+                    ),
                   ),
                   const FaIcon(FontAwesomeIcons.longArrowAltRight),
-                  Text(
-                    _uberMapController.destinationPlaceName.value.toString(),
-                    style: const TextStyle(
-                        fontWeight: FontWeight.w700, fontSize: 25),
+                  Flexible(
+                    child: Text(
+                      _uberMapController.destinationPlaceName.value.toString(),
+                      style: const TextStyle(
+                          fontWeight: FontWeight.w700, fontSize: 25),
+                      overflow: TextOverflow.ellipsis,
+                      //maxLines: 3,
+                    ),
                   ),
                 ],
               ),

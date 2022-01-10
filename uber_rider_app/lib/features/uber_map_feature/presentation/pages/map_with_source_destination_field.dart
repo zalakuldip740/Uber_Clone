@@ -47,7 +47,7 @@ class _MapWithSourceDestinationFieldState
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async {
-        Get.off(() => const UberHomePage());
+        Get.offAll(() => const UberHomePage());
         return true;
       },
       child: Scaffold(
@@ -112,7 +112,7 @@ class _MapWithSourceDestinationFieldState
                                   shape: BoxShape.circle, color: Colors.white),
                               child: GestureDetector(
                                 onTap: () {
-                                  Get.off(() => const UberHomePage());
+                                  Get.offAll(() => const UberHomePage());
                                 },
                                 child: const FaIcon(
                                   FontAwesomeIcons.arrowLeft,
@@ -190,6 +190,7 @@ class _MapWithSourceDestinationFieldState
                               itemBuilder: (context, index) {
                                 return ListTile(
                                   onTap: () async {
+                                    FocusScope.of(context).unfocus();
                                     if (_uberMapController
                                             .predictionListType.value ==
                                         'source') {

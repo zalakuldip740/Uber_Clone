@@ -8,7 +8,6 @@ import 'package:uber_rider_app/features/uber_profile_feature/presentation/getx/u
 import 'package:uber_rider_app/features/uber_profile_feature/presentation/widgets/uber_add_money_dialog_widget.dart';
 import 'package:uber_rider_app/features/uber_trips_history_feature/domain/entities/uber_trips_history_entity.dart';
 import 'package:uber_rider_app/features/uber_trips_history_feature/presentation/getx/uber_trip_history_controller.dart';
-import 'package:uber_rider_app/features/uber_trips_history_feature/presentation/pages/uber_trips_history_page.dart';
 import 'package:uber_rider_app/features/uber_trips_history_feature/presentation/widgets/rating_dialog_widget.dart';
 import 'package:uber_rider_app/injection_container.dart' as di;
 
@@ -27,90 +26,99 @@ class _UberPaymentBottomSheetState extends State<UberPaymentBottomSheet> {
       Get.put(di.sl<UberLiveTrackingController>());
   final UberTripsHistoryController _uberTripsHistoryController =
       Get.put(di.sl<UberTripsHistoryController>());
-  final UberProfileController _uberProfileController = Get.find();
+  final UberProfileController _uberProfileController =
+      Get.put(di.sl<UberProfileController>());
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      body: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            const SizedBox(
-              height: 25,
-            ),
-            const Text(
-              "Trip Completed",
-              style: TextStyle(fontWeight: FontWeight.w800, fontSize: 35),
-            ),
-            const SizedBox(
-              height: 25,
-            ),
-            ElevatedButton(
-              style: ButtonStyle(
-                  elevation: MaterialStateProperty.all(0.0),
-                  padding: MaterialStateProperty.all(const EdgeInsets.all(15))),
-              onPressed: () async {
-                String riderId = widget.tripHistoryEntity.riderId!.path
-                    .split('/')
-                    .last
-                    .trim();
-                String driverId = widget.tripHistoryEntity.driverId!.path
-                    .split('/')
-                    .last
-                    .trim();
-                int? tripAmount = widget.tripHistoryEntity.tripAmount;
-                String res = await _uberLiveTrackingController.makePayment(
-                    riderId, driverId, tripAmount!);
-                if (res == "done") {
-                  Get.off(() => const TripHistory());
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              const SizedBox(
+                height: 25,
+              ),
+              const Text(
+                "Trip Completed",
+                style: TextStyle(fontWeight: FontWeight.w800, fontSize: 35),
+              ),
+              const SizedBox(
+                height: 25,
+              ),
+              ElevatedButton(
+                style: ButtonStyle(
+                    elevation: MaterialStateProperty.all(0.0),
+                    padding:
+                        MaterialStateProperty.all(const EdgeInsets.all(15))),
+                onPressed: () async {
+                  String riderId = widget.tripHistoryEntity.riderId!.path
+                      .split('/')
+                      .last
+                      .trim();
+                  String driverId = widget.tripHistoryEntity.driverId!.path
+                      .split('/')
+                      .last
+                      .trim();
+                  int? tripAmount = widget.tripHistoryEntity.tripAmount;
+                  String res = await _uberLiveTrackingController.makePayment(
+                      riderId,
+                      driverId,
+                      tripAmount!,
+                      widget.tripHistoryEntity.tripId.toString());
+                  if (res == "done") {
+                    //Get.off(() => const TripHistory());
+                    showRatingAppDialog(context, widget.tripHistoryEntity,
+                        _uberTripsHistoryController);
+                  } else {
+                    Get.snackbar("Low balance!", "Pay via Cash or add money",
+                        snackPosition: SnackPosition.BOTTOM,
+                        duration: const Duration(seconds: 7),
+                        mainButton: TextButton(
+                            onPressed: () {
+                              displayAddMoneyDialog(
+                                  context, _uberProfileController);
+                            },
+                            child: const Text("Add Money")));
+                  }
+                },
+                child: Text(
+                  "Pay \u{20B9}${widget.tripHistoryEntity.tripAmount}",
+                  style: const TextStyle(fontSize: 18),
+                ),
+              ),
+              const SizedBox(
+                height: 25,
+              ),
+              const Text(
+                "OR",
+                style: TextStyle(fontSize: 22, fontWeight: FontWeight.w600),
+              ),
+              const SizedBox(
+                height: 25,
+              ),
+              ElevatedButton(
+                style: ButtonStyle(
+                    backgroundColor:
+                        MaterialStateProperty.all(Colors.deepOrange),
+                    elevation: MaterialStateProperty.all(0.0),
+                    padding:
+                        MaterialStateProperty.all(const EdgeInsets.all(15))),
+                onPressed: () {
+                  Get.back();
                   showRatingAppDialog(context, widget.tripHistoryEntity,
                       _uberTripsHistoryController);
-                } else {
-                  Get.snackbar("Low balance!", "Pay via Cash or add money",
-                      snackPosition: SnackPosition.BOTTOM,
-                      duration: const Duration(seconds: 7),
-                      mainButton: TextButton(
-                          onPressed: () {
-                            displayAddMoneyDialog(
-                                context, _uberProfileController);
-                          },
-                          child: const Text("Add Money")));
-                }
-              },
-              child: Text(
-                "Pay \u{20B9}${widget.tripHistoryEntity.tripAmount}",
-                style: const TextStyle(fontSize: 18),
-              ),
-            ),
-            const SizedBox(
-              height: 25,
-            ),
-            const Text(
-              "OR",
-              style: TextStyle(fontSize: 22, fontWeight: FontWeight.w600),
-            ),
-            const SizedBox(
-              height: 25,
-            ),
-            ElevatedButton(
-              style: ButtonStyle(
-                  backgroundColor: MaterialStateProperty.all(Colors.deepOrange),
-                  elevation: MaterialStateProperty.all(0.0),
-                  padding: MaterialStateProperty.all(const EdgeInsets.all(15))),
-              onPressed: () {
-                Get.back();
-                showRatingAppDialog(context, widget.tripHistoryEntity,
-                    _uberTripsHistoryController);
-              },
-              child: Text(
-                "Pay \u{20B9}${widget.tripHistoryEntity.tripAmount} cash",
-                style: const TextStyle(fontSize: 18),
-              ),
-            )
-          ],
+                },
+                child: Text(
+                  "Pay \u{20B9}${widget.tripHistoryEntity.tripAmount} cash",
+                  style: const TextStyle(fontSize: 18),
+                ),
+              )
+            ],
+          ),
         ),
       ),
     );

@@ -43,55 +43,81 @@ class UberLiveTrackingController extends GetxController {
 
   getDirectionData(int index) async {
     checkTripCompletionStatus(index);
+    LocationPermission permission;
     await Geolocator.requestPermission();
-    Position position = await Geolocator.getCurrentPosition();
-    liveLocLatitude.value = position.latitude;
-    liveLocLongitude.value = position.longitude;
-    final driverId = _uberTripsHistoryController
-        .tripsHistory.value[index].driverId!.path
-        .split("/")
-        .last
-        .trim();
-    destinationLat.value = _uberTripsHistoryController
-        .tripsHistory.value[index].destinationLocation!.latitude;
-    destinationLng.value = _uberTripsHistoryController
-        .tripsHistory.value[index].destinationLocation!.longitude;
-    vehicleTypeName.value = _uberTripsHistoryController
-        .tripDrivers.value[driverId]!.vehicle!.path
-        .split("/")
-        .first
-        .trim();
-    await uberMapDirectionUsecase
-        .call(
-            position.latitude,
-            position.longitude,
-            _uberTripsHistoryController
-                .tripsHistory.value[index].destinationLocation!.latitude,
-            _uberTripsHistoryController
-                .tripsHistory.value[index].destinationLocation!.longitude)
-        .then((directionData) {
-      uberMapDirectionData.value = directionData;
-      isLoading.value = false;
-    });
-    addMarkers(
-        BitmapDescriptor.fromBytes(await getBytesFromAsset(
-            vehicleTypeName.value == "cars"
-                ? 'assets/car.png'
-                : vehicleTypeName.value == "bikes"
-                    ? 'assets/bike.png'
-                    : 'assets/auto.png',
-            85)),
-        "live_marker",
-        liveLocLatitude.value,
-        liveLocLongitude.value);
-    addMarkers(BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed),
-        "destination_marker", destinationLat.value, destinationLng.value);
-    // addMarkers(
-    //     BitmapDescriptor.fromBytes(await getBytesFromCanvas(200, 100)),
-    //     "text_marker",
-    //     (liveLocLatitude.value + 0.000300),
-    //     liveLocLongitude.value);
-    addPolyLine();
+    permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) {
+        Get.snackbar(
+          "Location permissions are denied",
+          "Allow to use live tracking",
+          snackPosition: SnackPosition.BOTTOM,
+        );
+      }
+    } else if (permission == LocationPermission.deniedForever) {
+      Get.snackbar(
+        "Alert",
+        "Location permissions are permanently denied,please enable it from app setting",
+        snackPosition: SnackPosition.BOTTOM,
+      );
+    } else {
+      if (liveLocLatitude.value == 0.0) {
+        Get.snackbar(
+          "Alert",
+          "Turn on Location to use Live Tracking",
+          snackPosition: SnackPosition.BOTTOM,
+        );
+      }
+      Position position = await Geolocator.getCurrentPosition();
+      liveLocLatitude.value = position.latitude;
+      liveLocLongitude.value = position.longitude;
+      final driverId = _uberTripsHistoryController
+          .tripsHistory.value[index].driverId!.path
+          .split("/")
+          .last
+          .trim();
+      destinationLat.value = _uberTripsHistoryController
+          .tripsHistory.value[index].destinationLocation!.latitude;
+      destinationLng.value = _uberTripsHistoryController
+          .tripsHistory.value[index].destinationLocation!.longitude;
+      vehicleTypeName.value = _uberTripsHistoryController
+          .tripDrivers.value[driverId]!.vehicle!.path
+          .split("/")
+          .first
+          .trim();
+      await uberMapDirectionUsecase
+          .call(
+              position.latitude,
+              position.longitude,
+              _uberTripsHistoryController
+                  .tripsHistory.value[index].destinationLocation!.latitude,
+              _uberTripsHistoryController
+                  .tripsHistory.value[index].destinationLocation!.longitude)
+          .then((directionData) {
+        uberMapDirectionData.value = directionData;
+        isLoading.value = false;
+      });
+      addMarkers(
+          BitmapDescriptor.fromBytes(await getBytesFromAsset(
+              vehicleTypeName.value == "cars"
+                  ? 'assets/car.png'
+                  : vehicleTypeName.value == "bikes"
+                      ? 'assets/bike.png'
+                      : 'assets/auto.png',
+              85)),
+          "live_marker",
+          liveLocLatitude.value,
+          liveLocLongitude.value);
+      addMarkers(BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed),
+          "destination_marker", destinationLat.value, destinationLng.value);
+      // addMarkers(
+      //     BitmapDescriptor.fromBytes(await getBytesFromCanvas(200, 100)),
+      //     "text_marker",
+      //     (liveLocLatitude.value + 0.000300),
+      //     liveLocLongitude.value);
+      addPolyLine();
+    }
   }
 
   addPolyLine() async {
@@ -125,9 +151,10 @@ class UberLiveTrackingController extends GetxController {
     }
   }
 
-  makePayment(String riderId, String driverId, int tripAmount) async {
-    String res =
-        await uberTripPaymentUseCase.call(riderId, driverId, tripAmount);
+  makePayment(
+      String riderId, String driverId, int tripAmount, String tripId) async {
+    String res = await uberTripPaymentUseCase.call(
+        riderId, driverId, tripAmount, tripId);
     if (res == "done") {
       isPaymentDone.value = true;
       Get.snackbar('Done', "Payment successful");

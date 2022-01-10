@@ -17,6 +17,7 @@ class TripHistoryEntity extends Equatable {
   final double? rating;
   final bool? isArrived;
   final bool? readyForTrip;
+  final bool? isPaymentDone;
 
   TripHistoryEntity(
       {this.source,
@@ -33,7 +34,8 @@ class TripHistoryEntity extends Equatable {
       this.tripAmount,
       this.rating,
       this.isArrived,
-      this.readyForTrip});
+      this.readyForTrip,
+      this.isPaymentDone});
 
   @override
   List<Object?> get props => [
@@ -51,6 +53,7 @@ class TripHistoryEntity extends Equatable {
         tripAmount,
         rating,
         isArrived,
-        readyForTrip
+        readyForTrip,
+        isPaymentDone
       ];
 }
