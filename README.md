@@ -7,17 +7,17 @@ _A customer requests a pick up at a location chosen by the customer. The pickup 
 ## ***We will be going to extend Travelling experience with following app Features***
 
 
-###### Customer registration 
+- ###### Customer registration 
 
 Customer/rider downloads the Uber rider app. Customer registration done by verifying customer's credentials(phone number). We store customer's information in our firestore backend. The credentials are used to authenticate customer's order request and present to assigned drivers. 
 
-###### Driver registration 
+- ###### Driver registration 
 
 The driver downloads the Uber driver app, registers and authenticates through mobile number. Some of these credentials with vehicle data presented to the rider. 
 
  
 
- ###### Identify drivers 
+- ###### Identify drivers 
 
 In order to provide a great travelling experience for customers, The driver's name and vehicle information will be shown to nearby customer. 
 
