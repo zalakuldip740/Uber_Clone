@@ -3,7 +3,6 @@ import 'dart:typed_data';
 import 'dart:ui' as ui;
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:geocoding/geocoding.dart';
@@ -146,7 +145,8 @@ class UberMapController extends GetxController {
     Stream<List<UberDriverEntity>> availableDriversData =
         uberMapGetDriversUsecase.call();
     availableDriversList.clear();
-    availableDriversData.listen((driverData) async {
+    late StreamSubscription subscription;
+    subscription = availableDriversData.listen((driverData) async {
       availableDriversList.clear();
       for (int i = 0; i < driverData.length; i++) {
         if (Geolocator.distanceBetween(
@@ -173,14 +173,15 @@ class UberMapController extends GetxController {
       }
       if (availableDriversList.isNotEmpty) {
         getRentalCharges();
-      } else {
+      } else if (availableDriversList.isEmpty && isPoliLineDraw.value) {
         isPoliLineDraw.value = false;
         Get.snackbar(
           "Sorry !",
           "No Rides available",
-          backgroundColor: Colors.redAccent,
           snackPosition: SnackPosition.BOTTOM,
         );
+        isReadyToDisplayAvlDriver.value = false;
+        subscription.cancel();
       }
     });
     animateCameraPolyline();
@@ -273,10 +274,12 @@ class UberMapController extends GetxController {
             : vehicleType == 'auto'
                 ? autoRent.value
                 : bikeRent.value,
+        false,
         false);
     Stream reqStatusData = uberMapGenerateTripUseCase.call(generateTripModel);
     findDriverLoading.value = true;
-    reqStatusData.listen((data) async {
+    late StreamSubscription tripSubscription;
+    tripSubscription = reqStatusData.listen((data) async {
       final reqStatus = data.data()['ready_for_trip'];
       if (reqStatus && findDriverLoading.value) {
         final req_accepted_driver_vehicle_data =
@@ -298,17 +301,20 @@ class UberMapController extends GetxController {
             driverData.profile_img.toString();
         req_accepted_driver_and_vehicle_data["overall_rating"] =
             driverData.overall_rating.toString();
-        findDriverLoading.value = false;
-        Get.snackbar(
-          "Yahoo!",
-          "request accepted by driver,driver will arrive within 10 min",
-        );
-        reqAccepted.value = true;
+        if (findDriverLoading.value && reqAccepted.value == false) {
+          findDriverLoading.value = false;
+          Get.snackbar(
+            "Yahoo!",
+            "request accepted by driver,driver will arrive within 10 min",
+          );
+          reqAccepted.value = true;
+        }
       } else if (data.data()['is_arrived'] && !data.data()['is_completed']) {
         Get.snackbar(
             "driver arrived!", "Now you can track from tripHistory page!",
             duration: const Duration(seconds: 5),
             snackPosition: SnackPosition.BOTTOM);
+        tripSubscription.cancel();
         Get.off(() => const TripHistory());
       }
       Timer(const Duration(seconds: 45), () {

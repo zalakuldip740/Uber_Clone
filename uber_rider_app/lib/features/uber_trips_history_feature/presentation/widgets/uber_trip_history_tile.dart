@@ -6,6 +6,7 @@ import 'package:get/get_instance/src/extension_instance.dart';
 import 'package:get/get_navigation/src/extension_navigation.dart';
 import 'package:intl/intl.dart';
 import 'package:uber_rider_app/features/uber_map_feature/presentation/pages/uber_map_live_tracking_page.dart';
+import 'package:uber_rider_app/features/uber_map_feature/presentation/widgets/uber_payment_bottom_sheet_widget.dart';
 import 'package:uber_rider_app/features/uber_trips_history_feature/domain/entities/uber_trips_history_entity.dart';
 import 'package:uber_rider_app/features/uber_trips_history_feature/presentation/getx/uber_trip_history_controller.dart';
 import 'package:uber_rider_app/features/uber_trips_history_feature/presentation/widgets/rating_dialog_widget.dart';
@@ -28,6 +29,7 @@ class TripHistoryTile extends StatefulWidget {
 
 class _TripHistoryTileState extends State<TripHistoryTile> {
   final UberTripsHistoryController _uberTripsHistoryController = Get.find();
+
   @override
   Widget build(BuildContext context) {
     return SizedBox(
@@ -96,6 +98,22 @@ class _TripHistoryTileState extends State<TripHistoryTile> {
                           color: Colors.green,
                         ),
                       ),
+                    if (widget.tripHistoryEntity.isCompleted! &&
+                        !widget.tripHistoryEntity.isPaymentDone!)
+                      ElevatedButton(
+                          onPressed: () {
+                            Get.bottomSheet(
+                                SizedBox(
+                                    height: 300,
+                                    child: UberPaymentBottomSheet(
+                                        tripHistoryEntity:
+                                            _uberTripsHistoryController
+                                                .tripsHistory
+                                                .value[widget.index])),
+                                isDismissible: false,
+                                enableDrag: false);
+                          },
+                          child: const Text("Pay")),
                     Row(
                       children: [
                         Text(DateFormat('dd-MM-yy hh:mm').format(DateTime.parse(
@@ -208,15 +226,19 @@ class _TripHistoryTileState extends State<TripHistoryTile> {
   }
 
   Widget _iconWithTitle(String data, IconData iconData) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Icon(iconData),
-        Text(
-          data,
-          overflow: TextOverflow.ellipsis,
-        ),
-      ],
+    return Expanded(
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(iconData),
+          Flexible(
+            child: Text(
+              data,
+              overflow: TextOverflow.ellipsis,
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

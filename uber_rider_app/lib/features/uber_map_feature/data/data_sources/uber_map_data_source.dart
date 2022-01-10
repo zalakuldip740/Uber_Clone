@@ -16,5 +16,6 @@ abstract class UberMapDataSource {
   Stream generateTrip(GenerateTripModel generateTripModel);
   Future<VehicleModel> getVehicleDetails(String vehicleType, String driverId);
   Future<void> cancelTrip(String tripId);
-  Future<String> tripPayment(String riderId, String driverId, int tripAmount);
+  Future<String> tripPayment(
+      String riderId, String driverId, int tripAmount, String tripId);
 }

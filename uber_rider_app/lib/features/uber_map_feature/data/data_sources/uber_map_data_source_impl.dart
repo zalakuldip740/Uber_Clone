@@ -114,7 +114,8 @@ class UberMapDataSourceImpl extends UberMapDataSource {
       'travelling_time': generateTripModel.travellingTime,
       'ready_for_trip': generateTripModel.readyForTrip,
       'trip_amount': generateTripModel.tripAmount,
-      'is_arrived': generateTripModel.isArrived
+      'is_arrived': generateTripModel.isArrived,
+      'is_payment_done': generateTripModel.isPaymentDone
     });
 
     return genarateTripCollection.doc(docId).snapshots();
@@ -143,7 +144,7 @@ class UberMapDataSourceImpl extends UberMapDataSource {
 
   @override
   Future<String> tripPayment(
-      String riderId, String driverId, int tripAmount) async {
+      String riderId, String driverId, int tripAmount, String tripId) async {
     var res = "".obs;
     var riderAmt = 0.obs;
     var driverAmt = 0.obs;
@@ -157,16 +158,18 @@ class UberMapDataSourceImpl extends UberMapDataSource {
       if (riderAmt.value < tripAmount) {
         res.value = "low_balance";
       } else {
-        await firestore
-            .collection("riders")
-            .doc(riderId)
-            .update({'wallet': riderAmt.value - tripAmount});
-
-        await firestore
-            .collection("drivers")
-            .doc(driverId)
-            .update({'wallet': driverAmt.value + tripAmount});
-        res.value = "done";
+        await firestore.collection("riders").doc(riderId).update(
+            {'wallet': riderAmt.value - tripAmount}).whenComplete(() async {
+          await firestore.collection("drivers").doc(driverId).update(
+              {'wallet': driverAmt.value + tripAmount}).whenComplete(() async {
+            await firestore
+                .collection("trips")
+                .doc(tripId)
+                .update({'is_payment_done': true}).whenComplete(() {
+              res.value = "done";
+            });
+          });
+        });
       }
     });
     return Future.value(res.value);

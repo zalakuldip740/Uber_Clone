@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_instance/src/extension_instance.dart';
 import 'package:get/get_navigation/src/extension_navigation.dart';
+import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 import 'package:get/get_utils/get_utils.dart';
 import 'package:uber_rider_app/features/uber_auth_feature/presentation/getx/auth_controller.dart';
 import 'package:uber_rider_app/features/uber_auth_feature/presentation/widgets/uber_auth_register_textfield_widget.dart';
@@ -46,11 +47,13 @@ class _UberAuthRegistrationPageState extends State<UberAuthRegistrationPage> {
                 ),
                 Stack(
                   children: [
-                    CircleAvatar(
-                      radius: 45,
-                      backgroundImage:
-                          NetworkImage(_uberAuthController.profileImgUrl.value),
-                      //FileImage(_profileImage!),
+                    Obx(
+                      () => CircleAvatar(
+                        radius: 45,
+                        backgroundImage: NetworkImage(
+                            _uberAuthController.profileImgUrl.value),
+                        //FileImage(_profileImage!),
+                      ),
                     ),
                     Positioned(
                         bottom: 0,
@@ -82,6 +85,7 @@ class _UberAuthRegistrationPageState extends State<UberAuthRegistrationPage> {
                   width: double.infinity,
                   child: ElevatedButton(
                     onPressed: () {
+                      FocusScope.of(context).unfocus();
                       if (nameController.text.isNotEmpty &&
                           emailController.text.isNotEmpty &&
                           cityController.text.isNotEmpty &&

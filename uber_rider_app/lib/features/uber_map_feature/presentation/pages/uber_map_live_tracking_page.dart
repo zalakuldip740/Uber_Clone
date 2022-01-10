@@ -100,25 +100,31 @@ class _UberMapLiveTrackingPageState extends State<UberMapLiveTrackingPage> {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceAround,
                             children: [
-                              Text(
-                                _uberTripsHistoryController
-                                    .tripsHistory.value[widget.index].source
-                                    .toString(),
-                                style: const TextStyle(
-                                    fontWeight: FontWeight.w700,
-                                    fontSize: 25,
-                                    color: Colors.white),
+                              Flexible(
+                                child: Text(
+                                  _uberTripsHistoryController
+                                      .tripsHistory.value[widget.index].source
+                                      .toString(),
+                                  style: const TextStyle(
+                                      fontWeight: FontWeight.w700,
+                                      fontSize: 25,
+                                      color: Colors.white),
+                                  overflow: TextOverflow.ellipsis,
+                                ),
                               ),
                               const FaIcon(FontAwesomeIcons.longArrowAltRight,
                                   color: Colors.white),
-                              Text(
-                                _uberTripsHistoryController.tripsHistory
-                                    .value[widget.index].destination
-                                    .toString(),
-                                style: const TextStyle(
-                                    fontWeight: FontWeight.w700,
-                                    fontSize: 25,
-                                    color: Colors.white),
+                              Flexible(
+                                child: Text(
+                                  _uberTripsHistoryController.tripsHistory
+                                      .value[widget.index].destination
+                                      .toString(),
+                                  style: const TextStyle(
+                                      fontWeight: FontWeight.w700,
+                                      fontSize: 25,
+                                      color: Colors.white),
+                                  overflow: TextOverflow.ellipsis,
+                                ),
                               ),
                             ],
                           ),

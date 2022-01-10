@@ -17,6 +17,7 @@ class TripHistoryModel extends TripHistoryEntity {
   final DocumentReference? riderId;
   final bool? isArrived;
   final bool? readyForTrip;
+  final bool? isPaymentDone;
 
   factory TripHistoryModel.fromSnapshot(DocumentSnapshot documentSnapshot) {
     return TripHistoryModel(
@@ -35,7 +36,8 @@ class TripHistoryModel extends TripHistoryEntity {
         driverId: documentSnapshot.get('driver_id'),
         riderId: documentSnapshot.get('rider_id'),
         isArrived: documentSnapshot.get('is_arrived'),
-        readyForTrip: documentSnapshot.get('ready_for_trip'));
+        readyForTrip: documentSnapshot.get('ready_for_trip'),
+        isPaymentDone: documentSnapshot.get('is_payment_done'));
   }
 
   TripHistoryModel(
@@ -53,7 +55,8 @@ class TripHistoryModel extends TripHistoryEntity {
       required this.driverId,
       required this.riderId,
       required this.isArrived,
-      required this.readyForTrip})
+      required this.readyForTrip,
+      required this.isPaymentDone})
       : super(
             source: source,
             destination: destination,
@@ -69,5 +72,6 @@ class TripHistoryModel extends TripHistoryEntity {
             driverId: driverId,
             isArrived: isArrived,
             riderId: riderId,
-            readyForTrip: readyForTrip);
+            readyForTrip: readyForTrip,
+            isPaymentDone: isPaymentDone);
 }
