@@ -77,8 +77,5 @@ _Rider can give ratings to driver after completing the trip & according to the t
 
 _Trip history will remain as summary for both rider and driver apps._ 
 
-<a href="https://github.com/zalakuldip740/Uber_Clone/graphs/contributors">
-  <img src="https://contrib.rocks/image?repo=zalakuldip740/Uber_Clone" />
-</a>
 
 Made with [radixweb](https://github.com/zalakuldip740/Uber_Clone).
