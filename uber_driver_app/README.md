@@ -1,16 +1,16 @@
-# uber_driver_app
+# Uber Driver App
 
-uber driver app
+## Uber Driver app can be used by driver to : 
+```
+- Find new rides 
 
-## Getting Started
+- Accept a ride 
 
-This project is a starting point for a Flutter application.
+- Track and navigate till customer's pickup location, and mark the pickup as complete. 
 
-A few resources to get you started if this is your first Flutter project:
+- Track and navigate from customer's pickup to dropoff location, and mark the dropoff as complete. 
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
+- Show trip summary with distance travelled 
 
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+- Receiving tips, ratings and confirmation of payment. 
+```
