@@ -37,19 +37,38 @@
  
 
 ### Profile & Wallet
-<img src="https://github.com/zalakuldip740/Uber_Clone/blob/main/uber%20screenshots/uber%20driver/profile%20%26%20wallet/driver%20app%20default%20profile.jpg" width="300" height="600">
-<img src="https://github.com/zalakuldip740/Uber_Clone/blob/main/uber%20screenshots/uber%20driver/profile%20%26%20wallet/driver%20app%20edit%20profile%20page.jpg" width="300" height="600">
-<img src="https://github.com/zalakuldip740/Uber_Clone/blob/main/uber%20screenshots/uber%20driver/profile%20%26%20wallet/driver's%20rating%20and%20wallet%20updated%20after%20trip.jpg" width="300" height="600">
+<table>
+  <tr>
+  <td><img src="https://github.com/zalakuldip740/Uber_Clone/blob/main/uber%20screenshots/uber%20driver/profile%20%26%20wallet/driver%20app%20default%20profile.jpg" width="300" height="600"></td>
+<td><img src="https://github.com/zalakuldip740/Uber_Clone/blob/main/uber%20screenshots/uber%20driver/profile%20%26%20wallet/driver%20app%20edit%20profile%20page.jpg" width="300" height="600"></td>
+<td><img src="https://github.com/zalakuldip740/Uber_Clone/blob/main/uber%20screenshots/uber%20driver/profile%20%26%20wallet/driver's%20rating%20and%20wallet%20updated%20after%20trip.jpg" width="300" height="600"></td>
+  </tr>
+  </table>
+
 
 ### Trip History
-<img src="https://github.com/zalakuldip740/Uber_Clone/blob/main/uber%20screenshots/uber%20driver/trip%20history/driver's%20history%20page.jpg" width="300" height="600">
-<img src="https://github.com/zalakuldip740/Uber_Clone/blob/main/uber%20screenshots/uber%20driver/trip%20history/rider%20or%20driver%20app%20intial%20trip%20history.jpg" width="300" height="600">
+<table>
+  <tr>
+  <td><img src="https://github.com/zalakuldip740/Uber_Clone/blob/main/uber%20screenshots/uber%20driver/trip%20history/driver's%20history%20page.jpg" width="300" height="600"></td>
+<td><img src="https://github.com/zalakuldip740/Uber_Clone/blob/main/uber%20screenshots/uber%20driver/trip%20history/rider%20or%20driver%20app%20intial%20trip%20history.jpg" width="300" height="600"></td>
+  </tr>
+  </table>
+
 
 ### Trips
-<img src="https://github.com/zalakuldip740/Uber_Clone/blob/main/uber%20screenshots/uber%20driver/trips/allowing%20to%20call%20rider.jpg" width="300" height="600">
-<img src="https://github.com/zalakuldip740/Uber_Clone/blob/main/uber%20screenshots/uber%20driver/trips/calling%20to%20rider%20or%20driver.jpg" width="300" height="600">
-<img src="https://github.com/zalakuldip740/Uber_Clone/blob/main/uber%20screenshots/uber%20driver/trips/driver%20accepted%20req%20and%20route%20is%20drawn.jpg" width="300" height="600">
-<img src="https://github.com/zalakuldip740/Uber_Clone/blob/main/uber%20screenshots/uber%20driver/trips/driver%20app%20initial%20request%20list.jpg" width="300" height="600">
-<img src="https://github.com/zalakuldip740/Uber_Clone/blob/main/uber%20screenshots/uber%20driver/trips/driver%20having%20a%20req%20with%20rider%20and%20trip%20info.jpg" width="300" height="600">
-<img src="https://github.com/zalakuldip740/Uber_Clone/blob/main/uber%20screenshots/uber%20driver/trips/driver%20is%20arriving%20to%20source%20location.jpg" width="300" height="600">
-<img src="https://github.com/zalakuldip740/Uber_Clone/blob/main/uber%20screenshots/uber%20driver/trips/driver%20side%20payent%20confirmation.jpg" width="300" height="600">
+<table>
+  <tr>
+  <td><img src="https://github.com/zalakuldip740/Uber_Clone/blob/main/uber%20screenshots/uber%20driver/trips/allowing%20to%20call%20rider.jpg" width="300" height="600"></td>
+<td><img src="https://github.com/zalakuldip740/Uber_Clone/blob/main/uber%20screenshots/uber%20driver/trips/calling%20to%20rider%20or%20driver.jpg" width="300" height="600"></td>
+<td><img src="https://github.com/zalakuldip740/Uber_Clone/blob/main/uber%20screenshots/uber%20driver/trips/driver%20accepted%20req%20and%20route%20is%20drawn.jpg" width="300" height="600"></td>
+      <td><img src="https://github.com/zalakuldip740/Uber_Clone/blob/main/uber%20screenshots/uber%20driver/trips/driver%20app%20initial%20request%20list.jpg" width="300" height="600"></td>
+  </tr>
+  <tr>
+<td><img src="https://github.com/zalakuldip740/Uber_Clone/blob/main/uber%20screenshots/uber%20driver/trips/driver%20having%20a%20req%20with%20rider%20and%20trip%20info.jpg" width="300" height="600"></td>
+<td><img src="https://github.com/zalakuldip740/Uber_Clone/blob/main/uber%20screenshots/uber%20driver/trips/driver%20is%20arriving%20to%20source%20location.jpg" width="300" height="600"></td>
+    
+<td><img src="https://github.com/zalakuldip740/Uber_Clone/blob/main/uber%20screenshots/uber%20driver/trips/driver%20side%20payent%20confirmation.jpg" width="300" height="600"></td>
+  </tr>
+  </table>
+
+
