@@ -15,4 +15,4 @@
 - Receiving tips, ratings and confirmation of payment. 
 
 
-![This is an image](https://github.com/zalakuldip740/Uber_Clone/blob/main/uber%20screenshots/uber%20driver/authentication/create%20new%20driver%20account.jpg)
+<img src="https://github.com/zalakuldip740/Uber_Clone/blob/main/uber%20screenshots/uber%20driver/authentication/create%20new%20driver%20account.jpg" width="300" height="600">
