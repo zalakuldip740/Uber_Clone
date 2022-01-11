@@ -1,5 +1,5 @@
 # **Uber Clone App**
-
+*_made by <a href="https://github.com/vivekmavani">Vivek Mavani</a>, <a href="https://github.com/zalakuldip740">Kuldipsinh Zala</a>, <a href="https://github.com/ParmarHemanshu">Hemanshu Parmar</a>, <a href="https://github.com/romishpatoriya">Romish Patoriya</a>_*
 ## ***Abstract***
 
 _A customer requests a pick up at a location chosen by the customer. The pickup order is dispatched to drivers who are available within an area of reach. One of the drivers picks up the customer's request and proceeds to the customer's location for a pick up. Once the pick-up takes place, the driver will transport the customer to a destination chosen by the customer. Customer pay some amount and can give ratings to the driver._
