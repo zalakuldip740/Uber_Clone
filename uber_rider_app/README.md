@@ -17,6 +17,7 @@
 - Various payment methods are allowed including cash payment. 
 
 ### Authentication
+
 <table>
   <tr>
     <td><img src="https://github.com/zalakuldip740/Uber_Clone/blob/main/uber%20screenshots/uber%20rider/authentication/uber%20rider%20splashscreen.jpg" width="300" height="600"></td>
@@ -35,7 +36,9 @@
       <td><img src="https://github.com/zalakuldip740/Uber_Clone/blob/main/uber%20screenshots/uber%20rider/authentication/rider%20app%20homepage.jpg" width="300" height="600"></td>
   </tr>
 </table>
+
 ### Profile & Wallet
+
 <table>
   <tr>
     <td><img src="https://github.com/zalakuldip740/Uber_Clone/blob/main/uber%20screenshots/uber%20rider/profile%20%26%20wallet/rider%20app%20default%20profile%20page.jpg" width="300" height="600"></td>
@@ -48,7 +51,9 @@
   <td><img src="https://github.com/zalakuldip740/Uber_Clone/blob/main/uber%20screenshots/uber%20rider/profile%20%26%20wallet/rider's%20amount%20is%20debited%20after%20payment.jpg" width="300" height="600"></td>
   </tr>
 </table>
+
 ### Trip History
+
 <table>
   <tr>
     <td><img src="https://github.com/zalakuldip740/Uber_Clone/blob/main/uber%20screenshots/uber%20rider/trip%20history/rider's%20ongoing%20trip%20for%20tracking.jpg" width="300" height="600"></td>
@@ -62,7 +67,9 @@
     <td><img src="https://github.com/zalakuldip740/Uber_Clone/blob/main/uber%20screenshots/uber%20rider/trip%20history/rider%20or%20driver%20app%20intial%20trip%20history.jpg" width="300" height="600"></td>
   </tr>
 </table>
+
 ### Trips
+
   <table>
     <tr>
       <td><img src="https://github.com/zalakuldip740/Uber_Clone/blob/main/uber%20screenshots/uber%20rider/trips/calling%20to%20rider%20or%20driver.jpg" width="300" height="600"></td>
