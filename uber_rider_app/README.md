@@ -21,7 +21,7 @@
   <tr>
     <td><img src="https://github.com/zalakuldip740/Uber_Clone/blob/main/uber%20screenshots/uber%20rider/authentication/uber%20rider%20splashscreen.jpg" width="300" height="600"></td>
     <td><img src="https://github.com/zalakuldip740/Uber_Clone/blob/main/uber%20screenshots/uber%20rider/authentication/create%20new%20rider%20account.jpg" width="300" height="600"></td>
-      <td><img src="https://github.com/zalakuldip740/Uber_Clone/blob/main/uber%20screenshots/uber%20rider/authentication/verify%20number%20page.jpg"></td>
+      <td><img src="https://github.com/zalakuldip740/Uber_Clone/blob/main/uber%20screenshots/uber%20rider/authentication/verify%20number%20page.jpg" width="300" height="600"></td>
       <td><img src="https://github.com/zalakuldip740/Uber_Clone/blob/main/uber%20screenshots/uber%20rider/authentication/verifying%20phone%20number.jpg" width="300" height="600"></td>
   </tr>
   <tr>
