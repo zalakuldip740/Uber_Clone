@@ -5,7 +5,7 @@ class UberGetTripHistoryUsecase {
   final UberTripHistoryRepository uberTripHistoryRepository;
   UberGetTripHistoryUsecase({required this.uberTripHistoryRepository});
 
-  Stream<List<TripHistoryEntity>> call(String riderId) {
-    return uberTripHistoryRepository.uberGetTripHistory(riderId);
+  Stream<List<TripHistoryEntity>> call(String riderId, int page) {
+    return uberTripHistoryRepository.uberGetTripHistory(riderId, page);
   }
 }

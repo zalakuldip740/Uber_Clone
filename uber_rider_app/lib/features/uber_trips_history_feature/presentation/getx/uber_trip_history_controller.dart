@@ -21,22 +21,35 @@ class UberTripsHistoryController extends GetxController {
   var isTripLoaded = false.obs;
   var tripsHistory = <TripHistoryEntity>[].obs;
   var tripDrivers = <String, UberDriverEntity>{}.obs;
+  var page = 1.obs;
+  var isMoreLoading = false.obs;
 
   getTripsHistory() async {
-    tripsHistory.clear();
+    //tripsHistory.clear();
+    if (tripsHistory.isNotEmpty) {
+      isMoreLoading.value = true;
+    }
     String riderId = await uberAuthGetUserUidUseCase.call();
-    final tripsHistoryData = uberGetTripHistoryUsecase.call(riderId);
+    final tripsHistoryData =
+        uberGetTripHistoryUsecase.call(riderId, page.value);
     tripsHistoryData.listen((data) async {
-      tripsHistory.value = data;
-      for (int i = 0; i < data.length; i++) {
-        if (data[i].driverId != null) {
-          final driverId = data[i].driverId!.path.split('/').last.trim();
-          await uberGetTripDriverUsecase.call(driverId).then((driverData) {
-            tripDrivers[driverId] = driverData;
-          });
+      if (tripsHistory.value.length <= data.length) {
+        tripsHistory.value = data;
+        for (int i = 0; i < data.length; i++) {
+          if (data[i].driverId != null) {
+            final driverId = data[i].driverId!.path.split('/').last.trim();
+            await uberGetTripDriverUsecase.call(driverId).then((driverData) {
+              tripDrivers[driverId] = driverData;
+            });
+          }
         }
+        page.value++;
+      } else {
+        Get.snackbar("Sorry", "No more Data!",
+            snackPosition: SnackPosition.BOTTOM);
       }
       isTripLoaded.value = true;
+      isMoreLoading.value = false;
     });
   }
 

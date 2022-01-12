@@ -16,11 +16,23 @@ class TripHistory extends StatefulWidget {
 class _TripHistoryState extends State<TripHistory> {
   final UberTripsHistoryController _uberTripsHistoryController =
       Get.put(di.sl<UberTripsHistoryController>());
+  final ScrollController _scrollController = ScrollController();
 
   @override
   void initState() {
     _uberTripsHistoryController.getTripsHistory();
+    setUpScrollController();
     super.initState();
+  }
+
+  void setUpScrollController() {
+    _scrollController.addListener(() {
+      if (_scrollController.position.atEdge) {
+        if (_scrollController.position.pixels != 0) {
+          _uberTripsHistoryController.getTripsHistory();
+        }
+      }
+    });
   }
 
   @override
@@ -44,19 +56,40 @@ class _TripHistoryState extends State<TripHistory> {
                   ? const Center(
                       child: Text("Trips Not Found!"),
                     )
-                  : ListView.builder(
-                      itemCount:
-                          _uberTripsHistoryController.tripsHistory.value.length,
-                      shrinkWrap: true,
-                      scrollDirection: Axis.vertical,
-                      itemBuilder: (context, index) {
-                        return TripHistoryTile(
-                            tripHistoryEntity:
-                                _uberTripsHistoryController.tripsHistory[index],
-                            uberTripsHistoryController:
-                                _uberTripsHistoryController,
-                            index: index);
-                      }),
+                  : Stack(
+                      alignment: AlignmentDirectional.topCenter,
+                      children: [
+                        ListView.builder(
+                            controller: _scrollController,
+                            itemCount: _uberTripsHistoryController
+                                .tripsHistory.value.length,
+                            shrinkWrap: true,
+                            scrollDirection: Axis.vertical,
+                            itemBuilder: (context, index) {
+                              return TripHistoryTile(
+                                  tripHistoryEntity: _uberTripsHistoryController
+                                      .tripsHistory[index],
+                                  uberTripsHistoryController:
+                                      _uberTripsHistoryController,
+                                  index: index);
+                            }),
+                        Visibility(
+                          visible:
+                              _uberTripsHistoryController.isMoreLoading.value,
+                          child: Positioned(
+                              top: 10,
+                              child: Container(
+                                  padding: const EdgeInsets.all(4),
+                                  decoration: const BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      color: Colors.black),
+                                  child: const CircularProgressIndicator(
+                                    color: Colors.white,
+                                    backgroundColor: Colors.black,
+                                  ))),
+                        )
+                      ],
+                    ),
         ),
       ),
     );

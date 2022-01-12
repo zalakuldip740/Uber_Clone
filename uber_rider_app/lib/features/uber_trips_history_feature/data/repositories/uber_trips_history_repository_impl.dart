@@ -9,8 +9,8 @@ class UberTripHistoryRepositoryImpl extends UberTripHistoryRepository {
   UberTripHistoryRepositoryImpl({required this.uberTripsHistoryDataSource});
 
   @override
-  Stream<List<TripHistoryEntity>> uberGetTripHistory(String riderId) {
-    return uberTripsHistoryDataSource.uberGetTripHistory(riderId);
+  Stream<List<TripHistoryEntity>> uberGetTripHistory(String riderId, int page) {
+    return uberTripsHistoryDataSource.uberGetTripHistory(riderId, page);
   }
 
   @override

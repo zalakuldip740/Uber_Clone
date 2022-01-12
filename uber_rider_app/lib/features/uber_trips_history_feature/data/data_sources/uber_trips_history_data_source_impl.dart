@@ -10,10 +10,13 @@ class UberTripsHistoryDataSourceImpl extends UberTripsHistoryDataSource {
   UberTripsHistoryDataSourceImpl({required this.firestore});
 
   @override
-  Stream<List<TripHistoryModel>> uberGetTripHistory(String riderId) {
-    final tripsCollectionRef = firestore.collection("trips").where('rider_id',
-        isEqualTo:
-            FirebaseFirestore.instance.collection('riders').doc(riderId));
+  Stream<List<TripHistoryModel>> uberGetTripHistory(String riderId, int page) {
+    final tripsCollectionRef = firestore
+        .collection("trips")
+        .where('rider_id',
+            isEqualTo:
+                FirebaseFirestore.instance.collection('riders').doc(riderId))
+        .limit(5 * page);
 
     return tripsCollectionRef.snapshots().map((querySnap) {
       return querySnap.docs.reversed
