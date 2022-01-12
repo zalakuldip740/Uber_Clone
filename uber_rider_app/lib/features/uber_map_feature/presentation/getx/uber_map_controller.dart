@@ -69,6 +69,7 @@ class UberMapController extends GetxController {
   var req_accepted_driver_and_vehicle_data = <String, String>{};
 
   final Completer<GoogleMapController> controller = Completer();
+  late StreamSubscription subscription;
 
   UberMapController(
       {required this.uberMapPredictionUsecase,
@@ -145,7 +146,6 @@ class UberMapController extends GetxController {
     Stream<List<UberDriverEntity>> availableDriversData =
         uberMapGetDriversUsecase.call();
     availableDriversList.clear();
-    late StreamSubscription subscription;
     subscription = availableDriversData.listen((driverData) async {
       if (availableDriversList.length <= driverData.length) {
         availableDriversList.clear();
@@ -284,6 +284,7 @@ class UberMapController extends GetxController {
     tripSubscription = reqStatusData.listen((data) async {
       final reqStatus = data.data()['ready_for_trip'];
       if (reqStatus && findDriverLoading.value) {
+        subscription.cancel();
         final req_accepted_driver_vehicle_data =
             await uberMapGetVehicleDetailsUseCase.call(
                 vehicleType, driverId); // get vehicldata if req accepted
