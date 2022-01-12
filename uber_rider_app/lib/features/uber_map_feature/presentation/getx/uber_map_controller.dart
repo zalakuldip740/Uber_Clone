@@ -69,6 +69,7 @@ class UberMapController extends GetxController {
   var req_accepted_driver_and_vehicle_data = <String, String>{};
 
   final Completer<GoogleMapController> controller = Completer();
+  late StreamSubscription subscription;
 
   UberMapController(
       {required this.uberMapPredictionUsecase,
@@ -145,30 +146,31 @@ class UberMapController extends GetxController {
     Stream<List<UberDriverEntity>> availableDriversData =
         uberMapGetDriversUsecase.call();
     availableDriversList.clear();
-    late StreamSubscription subscription;
     subscription = availableDriversData.listen((driverData) async {
-      availableDriversList.clear();
-      for (int i = 0; i < driverData.length; i++) {
-        if (Geolocator.distanceBetween(
-                sourceLatitude.value,
-                sourceLongitude.value,
-                driverData[i].currentLocation!.latitude,
-                driverData[i].currentLocation!.longitude) <
-            5000) {
-          availableDriversList.add(driverData[i]);
-          addMarkers(
-            driverData[i].currentLocation!.latitude,
-            driverData[i].currentLocation!.longitude,
-            i.toString(),
-            // driverData[i].driverId.toString(),
-            BitmapDescriptor.fromBytes(await getBytesFromAsset(
-                driverData[i].vehicle!.path.split('/').first == "cars"
-                    ? 'assets/car.png'
-                    : driverData[i].vehicle!.path.split('/').first == "bikes"
-                        ? 'assets/bike.png'
-                        : 'assets/auto.png',
-                85)),
-          );
+      if (availableDriversList.length <= driverData.length) {
+        availableDriversList.clear();
+        for (int i = 0; i < driverData.length; i++) {
+          if (Geolocator.distanceBetween(
+                  sourceLatitude.value,
+                  sourceLongitude.value,
+                  driverData[i].currentLocation!.latitude,
+                  driverData[i].currentLocation!.longitude) <
+              5000) {
+            availableDriversList.add(driverData[i]);
+            addMarkers(
+              driverData[i].currentLocation!.latitude,
+              driverData[i].currentLocation!.longitude,
+              i.toString(),
+              // driverData[i].driverId.toString(),
+              BitmapDescriptor.fromBytes(await getBytesFromAsset(
+                  driverData[i].vehicle!.path.split('/').first == "cars"
+                      ? 'assets/car.png'
+                      : driverData[i].vehicle!.path.split('/').first == "bikes"
+                          ? 'assets/bike.png'
+                          : 'assets/auto.png',
+                  85)),
+            );
+          }
         }
       }
       if (availableDriversList.isNotEmpty) {
@@ -282,6 +284,7 @@ class UberMapController extends GetxController {
     tripSubscription = reqStatusData.listen((data) async {
       final reqStatus = data.data()['ready_for_trip'];
       if (reqStatus && findDriverLoading.value) {
+        subscription.cancel();
         final req_accepted_driver_vehicle_data =
             await uberMapGetVehicleDetailsUseCase.call(
                 vehicleType, driverId); // get vehicldata if req accepted
