@@ -3,6 +3,7 @@ import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_instance/src/extension_instance.dart';
 import 'package:get/get_navigation/src/extension_navigation.dart';
 import 'package:get/get_navigation/src/snackbar/snackbar.dart';
+import 'package:uber_rider_app/features/uber_home_page_feature/presentation/pages/uber_home_page.dart';
 import 'package:uber_rider_app/features/uber_map_feature/presentation/getx/uber_live_tracking_controller.dart';
 import 'package:uber_rider_app/features/uber_profile_feature/presentation/getx/uber_profile_controller.dart';
 import 'package:uber_rider_app/features/uber_profile_feature/presentation/widgets/uber_add_money_dialog_widget.dart';
@@ -68,9 +69,10 @@ class _UberPaymentBottomSheetState extends State<UberPaymentBottomSheet> {
                       riderId,
                       driverId,
                       tripAmount!,
-                      widget.tripHistoryEntity.tripId.toString());
+                      widget.tripHistoryEntity.tripId.toString(),
+                      "wallet");
                   if (res == "done") {
-                    //Get.off(() => const TripHistory());
+                    Get.off(() => const UberHomePage());
                     showRatingAppDialog(context, widget.tripHistoryEntity,
                         _uberTripsHistoryController);
                   } else {
@@ -107,8 +109,11 @@ class _UberPaymentBottomSheetState extends State<UberPaymentBottomSheet> {
                     elevation: MaterialStateProperty.all(0.0),
                     padding:
                         MaterialStateProperty.all(const EdgeInsets.all(15))),
-                onPressed: () {
-                  Get.back();
+                onPressed: () async {
+                  await _uberLiveTrackingController.makePayment("", "", 0,
+                      widget.tripHistoryEntity.tripId.toString(), "cash");
+                  Get.off(() => const UberHomePage());
+                  //Get.back();
                   showRatingAppDialog(context, widget.tripHistoryEntity,
                       _uberTripsHistoryController);
                 },

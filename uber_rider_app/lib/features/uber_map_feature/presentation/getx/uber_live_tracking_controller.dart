@@ -151,10 +151,10 @@ class UberLiveTrackingController extends GetxController {
     }
   }
 
-  makePayment(
-      String riderId, String driverId, int tripAmount, String tripId) async {
+  makePayment(String riderId, String driverId, int tripAmount, String tripId,
+      String payMode) async {
     String res = await uberTripPaymentUseCase.call(
-        riderId, driverId, tripAmount, tripId);
+        riderId, driverId, tripAmount, tripId, payMode);
     if (res == "done") {
       isPaymentDone.value = true;
       Get.snackbar('Done', "Payment successful");

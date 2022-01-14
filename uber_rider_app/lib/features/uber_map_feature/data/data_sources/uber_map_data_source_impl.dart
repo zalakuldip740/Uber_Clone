@@ -143,35 +143,47 @@ class UberMapDataSourceImpl extends UberMapDataSource {
   }
 
   @override
-  Future<String> tripPayment(
-      String riderId, String driverId, int tripAmount, String tripId) async {
+  Future<String> tripPayment(String riderId, String driverId, int tripAmount,
+      String tripId, String payMode) async {
     var res = "".obs;
     var riderAmt = 0.obs;
     var driverAmt = 0.obs;
-    await firestore.collection("riders").doc(riderId).get().then((value) {
-      riderAmt.value = value.get('wallet');
-    }).whenComplete(() async {
-      await firestore.collection("drivers").doc(driverId).get().then((value) {
-        driverAmt.value = value.get('wallet').round();
-      });
-    }).whenComplete(() async {
-      if (riderAmt.value < tripAmount) {
-        res.value = "low_balance";
-      } else {
-        await firestore.collection("riders").doc(riderId).update(
-            {'wallet': riderAmt.value - tripAmount}).whenComplete(() async {
-          await firestore.collection("drivers").doc(driverId).update(
-              {'wallet': driverAmt.value + tripAmount}).whenComplete(() async {
+    if (payMode == "wallet") {
+      await firestore.collection("riders").doc(riderId).get().then((value) {
+        riderAmt.value = value.get('wallet');
+      }).whenComplete(() async {
+        await firestore.collection("drivers").doc(driverId).get().then((value) {
+          driverAmt.value = value.get('wallet').round();
+        });
+      }).whenComplete(() async {
+        if (riderAmt.value < tripAmount) {
+          res.value = "low_balance";
+        } else {
+          await firestore.collection("riders").doc(riderId).update(
+              {'wallet': riderAmt.value - tripAmount}).whenComplete(() async {
             await firestore
-                .collection("trips")
-                .doc(tripId)
-                .update({'is_payment_done': true}).whenComplete(() {
-              res.value = "done";
+                .collection("drivers")
+                .doc(driverId)
+                .update({'wallet': driverAmt.value + tripAmount}).whenComplete(
+                    () async {
+              await firestore
+                  .collection("trips")
+                  .doc(tripId)
+                  .update({'is_payment_done': true}).whenComplete(() {
+                res.value = "done";
+              });
             });
           });
-        });
-      }
-    });
+        }
+      });
+    } else {
+      await firestore
+          .collection("trips")
+          .doc(tripId)
+          .update({'is_payment_done': true}).whenComplete(() {
+        res.value = "done";
+      });
+    }
     return Future.value(res.value);
   }
 }
