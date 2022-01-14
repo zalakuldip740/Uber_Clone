@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_navigation/src/extension_navigation.dart';
 import 'package:uber_rider_app/features/uber_profile_feature/data/data_sources/uber_profile_data_source.dart';
@@ -28,7 +29,8 @@ class UberProfileDataSourceImpl extends UberProfileDataSource {
           .doc(riderId)
           .set(riderModel.toDocument())
           .whenComplete(() {
-        Get.snackbar("Done", "Profile Updated!");
+        Get.snackbar("Done", "Profile Updated!",
+            snackPosition: SnackPosition.BOTTOM);
       });
     } on FirebaseException catch (e) {
       Get.snackbar("error", e.code.toString());

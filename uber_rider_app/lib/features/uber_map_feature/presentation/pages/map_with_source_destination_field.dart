@@ -47,6 +47,7 @@ class _MapWithSourceDestinationFieldState
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async {
+        _uberMapController.subscription.cancel();
         Get.offAll(() => const UberHomePage());
         return true;
       },
@@ -112,6 +113,7 @@ class _MapWithSourceDestinationFieldState
                                   shape: BoxShape.circle, color: Colors.white),
                               child: GestureDetector(
                                 onTap: () {
+                                  _uberMapController.subscription.cancel();
                                   Get.offAll(() => const UberHomePage());
                                 },
                                 child: const FaIcon(

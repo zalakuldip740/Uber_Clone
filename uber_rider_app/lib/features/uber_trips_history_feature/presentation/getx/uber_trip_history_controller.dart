@@ -33,21 +33,22 @@ class UberTripsHistoryController extends GetxController {
     final tripsHistoryData =
         uberGetTripHistoryUsecase.call(riderId, page.value);
     tripsHistoryData.listen((data) async {
-      if (tripsHistory.value.length <= data.length) {
-        tripsHistory.value = data;
-        for (int i = 0; i < data.length; i++) {
-          if (data[i].driverId != null) {
-            final driverId = data[i].driverId!.path.split('/').last.trim();
-            await uberGetTripDriverUsecase.call(driverId).then((driverData) {
-              tripDrivers[driverId] = driverData;
-            });
-          }
+      // if (tripsHistory.value.length <= data.length) {
+      tripsHistory.value = data;
+      for (int i = 0; i < data.length; i++) {
+        if (data[i].driverId != null) {
+          final driverId = data[i].driverId!.path.split('/').last.trim();
+          await uberGetTripDriverUsecase.call(driverId).then((driverData) {
+            tripDrivers[driverId] = driverData;
+          });
         }
-        page.value++;
-      } else {
-        Get.snackbar("Sorry", "No more Data!",
-            snackPosition: SnackPosition.BOTTOM);
       }
+      page.value++;
+      // }
+      // else {
+      //   Get.snackbar("Sorry", "No more Data!",
+      //       snackPosition: SnackPosition.BOTTOM);
+      // }
       isTripLoaded.value = true;
       isMoreLoading.value = false;
     });

@@ -203,6 +203,7 @@ class _TripHistoryTileState extends State<TripHistoryTile> {
             ),
             Visibility(
               visible: widget.tripHistoryEntity.isCompleted! &&
+                  widget.tripHistoryEntity.isPaymentDone! &&
                   widget.tripHistoryEntity.rating == 0.0,
               child: Expanded(
                 child: ElevatedButton(

@@ -76,9 +76,9 @@ class UberMapRepositoryImpl extends UberMapRepository {
   }
 
   @override
-  Future<String> tripPayment(
-      String riderId, String driverId, int tripAmount, String tripId) async {
+  Future<String> tripPayment(String riderId, String driverId, int tripAmount,
+      String tripId, String payMode) async {
     return await uberMapDataSource.tripPayment(
-        riderId, driverId, tripAmount, tripId);
+        riderId, driverId, tripAmount, tripId, payMode);
   }
 }
