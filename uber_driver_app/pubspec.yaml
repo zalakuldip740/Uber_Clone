@@ -32,7 +32,7 @@ dependencies:
 
   #map
   google_maps_flutter: ^2.1.1
-  geolocator: ^8.0.1
+  geolocator: ^8.0.3
   flutter_polyline_points: ^1.0.0
 
   # dependency injection

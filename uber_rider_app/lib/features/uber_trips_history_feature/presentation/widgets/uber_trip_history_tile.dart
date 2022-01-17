@@ -176,7 +176,7 @@ class _TripHistoryTileState extends State<TripHistoryTile> {
             ),
             Expanded(
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   _iconWithTitle(
                       widget.tripHistoryEntity.travellingTime.toString(),
@@ -195,9 +195,8 @@ class _TripHistoryTileState extends State<TripHistoryTile> {
                                   .toString(),
                           FontAwesomeIcons.car)
                       : _iconWithTitle("  --", FontAwesomeIcons.car),
-                  _iconWithTitle(
-                      "${widget.tripHistoryEntity.tripAmount}\u{20B9}",
-                      Icons.credit_card_rounded),
+                  _iconWithTitle("${widget.tripHistoryEntity.tripAmount}",
+                      FontAwesomeIcons.rupeeSign),
                 ],
               ),
             ),
@@ -231,11 +230,18 @@ class _TripHistoryTileState extends State<TripHistoryTile> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(iconData),
+          Padding(
+            padding: const EdgeInsets.all(4.0),
+            child: Icon(
+              iconData,
+              size: 24,
+            ),
+          ),
           Flexible(
             child: Text(
               data,
               overflow: TextOverflow.ellipsis,
+              style: const TextStyle(fontWeight: FontWeight.normal),
             ),
           ),
         ],

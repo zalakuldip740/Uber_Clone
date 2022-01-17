@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_navigation/src/extension_navigation.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
@@ -19,7 +20,6 @@ class UberProfileEditPage extends StatefulWidget {
 class _UberProfileEditPageState extends State<UberProfileEditPage> {
   final nameController = TextEditingController();
   final emailController = TextEditingController();
-
 
   @override
   void dispose() {
@@ -46,10 +46,10 @@ class _UberProfileEditPageState extends State<UberProfileEditPage> {
                       emailController.text.isNotEmpty &&
                       GetUtils.isEmail(emailController.text)) {
                     widget.uberProfileController.updateDriverProfile(
-                        nameController.text,
-                        emailController.text);
+                        nameController.text, emailController.text);
                   } else {
-                    Get.snackbar("error", "invalid values!");
+                    Get.snackbar("error", "invalid values!",
+                        snackPosition: SnackPosition.BOTTOM);
                   }
                 },
                 child: const Icon(Icons.check)),
@@ -162,7 +162,6 @@ class _UberProfileEditPageState extends State<UberProfileEditPage> {
                               const SizedBox(
                                 height: 15,
                               ),
-
                             ],
                           ),
                         )

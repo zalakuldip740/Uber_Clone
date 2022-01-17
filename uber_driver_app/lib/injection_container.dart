@@ -5,7 +5,6 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:get_it/get_it.dart';
 import 'package:uber_driver_app/features/uber_profile_feature/domain/use_cases/uber_profile_upload_vehicle_data_usecase.dart';
 import 'package:uber_driver_app/features/uber_profile_feature/presentation/getx/uber_profile_controller.dart';
-import 'package:uber_driver_app/features/uber_trip_feature/presentation/controller/driver_location/driver_location_controller.dart';
 import 'package:uber_driver_app/features/uber_trip_feature/presentation/cubit/available_for_ride/user_req_cubit.dart';
 import 'package:uber_driver_app/features/uber_trip_feature/presentation/cubit/driver_live_location/driver_location_cubit.dart';
 import 'package:uber_driver_app/features/uber_trip_feature/presentation/cubit/uber_driver_map/uber_map_cubit.dart';
@@ -86,9 +85,6 @@ Future<void> init() async {
       uberProfileUpdateDriverUsecase: sl.call(),
       uberAddProfileImgUseCase: sl.call(),
       uberUploadDriverVehicleDataUseCase: sl.call()));
-
-  sl.registerFactory<DriverLocationController>(
-      () => DriverLocationController(driverLocationUseCase: sl.call()));
 
   sl.registerFactory<UberProfileController>(() => UberProfileController(
       uberProfileUpdateDriverUsecase: sl.call(),

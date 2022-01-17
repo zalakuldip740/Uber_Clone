@@ -61,6 +61,7 @@ Future<void> init() async {
 
   sl.registerFactory<UberNetWorkStatusChecker>(
       () => UberNetWorkStatusChecker());
+
   // feature:- current location
   //getx
   sl.registerFactory<UberHomeController>(

@@ -82,7 +82,7 @@ class DriverDetails extends StatelessWidget {
                   style: const TextStyle(fontWeight: FontWeight.w500),
                 ),
                 Text(
-                  "vehicle color :" +
+                  "color :" +
                       uberMapController
                           .req_accepted_driver_and_vehicle_data["vehicle_color"]
                           .toString(),
@@ -97,7 +97,7 @@ class DriverDetails extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 Text(
-                  "vehicle model :" +
+                  "model :" +
                       uberMapController
                           .req_accepted_driver_and_vehicle_data["vehicle_model"]
                           .toString(),

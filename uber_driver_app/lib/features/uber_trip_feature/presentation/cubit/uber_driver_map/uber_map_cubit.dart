@@ -6,12 +6,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get_core/src/get_main.dart';
-import 'package:get/get_instance/src/extension_instance.dart';
+import 'package:get/get_navigation/src/extension_navigation.dart';
+import 'package:get/get_navigation/src/snackbar/snackbar.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:uber_driver_app/config/maps_api_key.dart';
-import 'package:uber_driver_app/features/uber_trip_feature/presentation/controller/driver_location/driver_location_controller.dart';
 import 'package:uber_driver_app/features/uber_trip_feature/presentation/cubit/available_for_ride/user_req_cubit.dart';
-import 'package:uber_driver_app/injection_container.dart' as di;
 
 part 'uber_map_state.dart';
 
@@ -28,14 +27,15 @@ class UberMapCubit extends Cubit<UberMapState> {
   late double _current_long;
   late double _destination_lat;
   late double _destination_long;
-  final c = Get.put(di.sl<DriverLocationController>());
-  Completer<GoogleMapController> mapController = Completer();
+
+  late GoogleMapController controller;
 
   UberMapCubit() : super(UberMapInitial());
 
   //method for drawing route of accepted trip
-  void drawRoute(UserReqDisplayOne state) async {
+  void drawRoute(UserReqDisplayOne state, BuildContext context) async {
     if (isPolyLineDrawn == false) {
+
       emit(UberMapLoading());
 
       _source_lat = state.tripDriver.tripHistoryModel.sourceLocation!.latitude;
@@ -45,6 +45,8 @@ class UberMapCubit extends Cubit<UberMapState> {
           state.tripDriver.tripHistoryModel.destinationLocation!.latitude;
       _destination_long =
           state.tripDriver.tripHistoryModel.destinationLocation!.longitude;
+
+      //for way point
       String pickup_point = state.tripDriver.tripHistoryModel.source.toString();
 
       /// source location/pickup point marker
@@ -80,7 +82,6 @@ class UberMapCubit extends Cubit<UberMapState> {
       }).catchError((e) {
         print(e);
       });
-
       _getPolyline(_current_lat, _current_long, _destination_lat,
           _destination_long, pickup_point);
     } else {
@@ -90,6 +91,7 @@ class UberMapCubit extends Cubit<UberMapState> {
 
   _getPolyline(double source_lat, double source_long, double dest_lat,
       double dest_long, String pickup_point) async {
+
     emit(UberMapLoading());
     PolylineResult result = await polylinePoints.getRouteBetweenCoordinates(
         apiKey,
@@ -101,11 +103,12 @@ class UberMapCubit extends Cubit<UberMapState> {
       for (var point in result.points) {
         polylineCoordinates.add(LatLng(point.latitude, point.longitude));
       }
+      _addPolyLine();
     }
-    _addPolyLine();
   }
 
   _addPolyLine() {
+
     PolylineId id = const PolylineId("poly");
     Polyline polyline = Polyline(
         polylineId: id,
@@ -117,21 +120,64 @@ class UberMapCubit extends Cubit<UberMapState> {
     emit(UberMapLoaded(polylines: polylines, markers: markers));
   }
 
-  resetMapForNewRide() {
+  resetMapForNewRide(BuildContext context) async {
     if (state is UberMapLoaded) {
       isPolyLineDrawn = false;
+      polylineCoordinates.clear();
       emit(UberMapInitial());
     }
+
   }
 
   // Method for retrieving the current location
-  getCurrentLocation(BuildContext context) async {
-    final GoogleMapController controller = await mapController.future;
-    await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high)
-        .then((Position position) async {
-      c.changePosition(position, controller, context);
-    }).catchError((e) {
-      print(e);
-    });
+  getCurrentLocation(BuildContext context,
+      {required Completer<GoogleMapController> mapController}) async {
+    LocationPermission permission;
+
+    permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) {
+        Get.snackbar(
+          "Alert",
+          "Location permissions are denied",
+          backgroundColor: Colors.redAccent,
+          snackPosition: SnackPosition.BOTTOM,
+        );
+      } else if (permission == LocationPermission.deniedForever) {
+        Get.snackbar(
+          "Alert",
+          "Location permissions are permanently denied,please enable it from app setting",
+          backgroundColor: Colors.redAccent,
+          snackPosition: SnackPosition.BOTTOM,
+        );
+      }
+    } else if (permission == LocationPermission.whileInUse ||
+        permission == LocationPermission.always) {
+
+      controller = await mapController.future;
+      await Geolocator.getCurrentPosition(
+              desiredAccuracy: LocationAccuracy.high)
+          .then((Position position) async {
+        //   location_controller.changePosition(position, controller, context);
+        controller.animateCamera(
+          CameraUpdate.newCameraPosition(
+            CameraPosition(
+              target: LatLng(position.latitude, position.longitude),
+              zoom: 18.0,
+            ),
+          ),
+        );
+      }).catchError((e) {
+        print(e);
+      });
+    } else {
+      Get.snackbar(
+        "Alert",
+        "Location permissions are permanently denied,please enable it from app setting",
+        backgroundColor: Colors.redAccent,
+        snackPosition: SnackPosition.BOTTOM,
+      );
+    }
   }
 }

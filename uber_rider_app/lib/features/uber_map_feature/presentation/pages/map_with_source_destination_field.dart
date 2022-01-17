@@ -113,8 +113,8 @@ class _MapWithSourceDestinationFieldState
                                   shape: BoxShape.circle, color: Colors.white),
                               child: GestureDetector(
                                 onTap: () {
-                                  _uberMapController.subscription.cancel();
                                   Get.offAll(() => const UberHomePage());
+                                  _uberMapController.subscription.cancel();
                                 },
                                 child: const FaIcon(
                                   FontAwesomeIcons.arrowLeft,

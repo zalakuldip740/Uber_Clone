@@ -28,7 +28,7 @@ Widget buildStaticOtpVerificationBody() {
         height: 10,
       ),
       const Text(
-        "Enter your 4 Digit OTP below ",
+        "Enter your 6 Digit OTP below ",
         style: TextStyle(
           fontSize: 14,
           fontWeight: FontWeight.bold,

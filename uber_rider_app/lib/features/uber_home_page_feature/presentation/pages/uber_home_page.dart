@@ -29,6 +29,7 @@ class _UberHomePageState extends State<UberHomePage> {
     target: LatLng(23.030357, 72.517845),
     zoom: 14.4746,
   );
+
   @override
   void initState() {
     super.initState();
@@ -53,7 +54,14 @@ class _UberHomePageState extends State<UberHomePage> {
               ),
               uberHomeTopShareLocationCardWidget(_uberHomeController),
               const SizedBox(height: 15),
-              uberHomeRiderOptionsWidget(),
+              GestureDetector(
+                onTap: () {
+                  Get.to(() => const MapWithSourceDestinationField(
+                      newCameraPosition: _defaultLocation,
+                      defaultCameraPosition: _defaultLocation));
+                },
+                child: uberHomeRiderOptionsWidget(),
+              ),
               const SizedBox(height: 15),
               GestureDetector(
                 onTap: () {

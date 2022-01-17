@@ -93,7 +93,7 @@ class UserReqCubit extends Cubit<UserReqState> {
     tripDriverUpdated = tripDriver;
     final String driverId =
         await getUserUidUseCase.uberAuthRepository.uberAuthGetUserUid();
-    _uberProfileController.getDriverProfile();
+    await _uberProfileController.getDriverProfile();
     final driver = _uberProfileController.driverEntity;
 
     try {
