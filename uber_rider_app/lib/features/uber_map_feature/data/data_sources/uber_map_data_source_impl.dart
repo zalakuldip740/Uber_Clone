@@ -26,7 +26,6 @@ class UberMapDataSourceImpl extends UberMapDataSource {
 
   @override
   Future<PredictionsList> getUberMapPrediction(String placeName) async {
-    //const baseUrl = 'maps.googleapis.com';
     final autoCompleteUrl = Uri.https(
         baseUrl,
         '/maps/api/place/autocomplete/json',
