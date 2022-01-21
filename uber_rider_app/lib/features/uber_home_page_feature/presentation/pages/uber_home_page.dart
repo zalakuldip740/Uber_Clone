@@ -54,7 +54,14 @@ class _UberHomePageState extends State<UberHomePage> {
               ),
               uberHomeTopShareLocationCardWidget(_uberHomeController),
               const SizedBox(height: 15),
-              uberHomeRiderOptionsWidget(),
+              GestureDetector(
+                onTap: () {
+                  Get.to(() => const MapWithSourceDestinationField(
+                      newCameraPosition: _defaultLocation,
+                      defaultCameraPosition: _defaultLocation));
+                },
+                child: uberHomeRiderOptionsWidget(),
+              ),
               const SizedBox(height: 15),
               GestureDetector(
                 onTap: () {

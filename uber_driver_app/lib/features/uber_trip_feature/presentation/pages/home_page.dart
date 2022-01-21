@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:uber_driver_app/core/internet/internet_cubit.dart';
 import 'package:uber_driver_app/core/widgets/loading_widget.dart';
 import 'package:uber_driver_app/core/widgets/no_internet_widget.dart';
@@ -22,18 +21,12 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  static const CameraPosition _initialLocation = CameraPosition(
-    target: LatLng(23.35125, 72.956),
-    zoom: 17.0,
-  );
-
   @override
   void initState() {
     super.initState();
     Geolocator.requestPermission();
     try {
       BlocProvider.of<InternetCubit>(context).monitorInternetConnection();
-      BlocProvider.of<DriverLocationCubit>(context).getCurrentLocation(context);
       BlocProvider.of<DriverLocationCubit>(context).getDriverLocation();
     } on Exception catch (e) {
       print(e);
@@ -63,6 +56,11 @@ class _HomePageState extends State<HomePage> {
             bottomNavigationBar:
                 BlocBuilder<DriverLocationCubit, DriverLocationState>(
               builder: (context, state) {
+                if (state is DriverLocationInitial ||
+                    state is DriverLocationLoading) {
+                  BlocProvider.of<DriverLocationCubit>(context)
+                      .getDriverLocation();
+                }
                 if (state is DriverLocationLoaded) {
                   BlocProvider.of<DriverLocationCubit>(context).is_online =
                       state.driverModel.is_online!;
@@ -109,29 +107,15 @@ class _HomePageState extends State<HomePage> {
                   );
                 }
                 return const SizedBox.shrink();
-                // return const Center(
-                //   // child: ElevatedButton(
-                //   //   onPressed: (){
-                //   //     BlocProvider.of<DriverLocationCubit>(context).getCurrentLocation(context);
-                //   //     BlocProvider.of<DriverLocationCubit>(context).getDriverLocation();
-                //   //   },
-                //   child: Text(""),
-                //   // ),
-                // );
               },
             ),
             resizeToAvoidBottomInset: false,
-            bottomSheet: Container(
-              height: 300,
-              decoration: const BoxDecoration(color: Colors.black),
-              child: Column(),
-            ),
             body: Stack(
-              children: <Widget>[
+              children: [
                 BlocBuilder<UberMapCubit, UberMapState>(
                     builder: (context, state) {
                   if (state is UberMapInitial) {
-                    return const UberMapInitialWidget();
+                    return GoogleMapWidget(const {}, const {});
                   } else if (state is UberMapLoading) {
                     return const Center(
                       child: CircularProgressIndicator(
@@ -140,10 +124,12 @@ class _HomePageState extends State<HomePage> {
                       ),
                     );
                   } else if (state is UberMapLoaded) {
-                    return GoogleMapWidget(state.markers, state.polylines);
+                    return GoogleMapWidget(
+                      state.markers,
+                      state.polylines,
+                    );
                   }
-
-                  return const UberMapInitialWidget();
+                  return GoogleMapWidget(const {}, const {});
                 }),
                 Positioned(
                   child: Align(
@@ -153,6 +139,11 @@ class _HomePageState extends State<HomePage> {
                       child:
                           BlocBuilder<DriverLocationCubit, DriverLocationState>(
                         builder: (context, state) {
+                          if (state is DriverLocationInitial ||
+                              state is DriverLocationLoading) {
+                            BlocProvider.of<DriverLocationCubit>(context)
+                                .getDriverLocation();
+                          }
                           if (state is DriverLocationLoaded) {
                             return Row(
                               crossAxisAlignment: CrossAxisAlignment.center,
@@ -174,7 +165,7 @@ class _HomePageState extends State<HomePage> {
                                           .updateDriver(
                                               !state.driverModel.is_online!,
                                               state.driverModel);
-                                    } else {}
+                                    }
                                   },
                                 ),
                                 ProfileWidget(
@@ -197,36 +188,6 @@ class _HomePageState extends State<HomePage> {
                     ),
                   ),
                 ),
-                Positioned(
-                  child: Container(
-                    margin: const EdgeInsets.only(bottom: 20),
-                    child: Align(
-                      alignment: Alignment.bottomRight,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: <Widget>[
-                          FunctionalButton(
-                            icon: Icons.my_location,
-                            title: "",
-                            onPressed: () {
-                              //for animate camera before a ride
-                              BlocProvider.of<DriverLocationCubit>(context)
-                                  .getCurrentLocation(context);
-
-                              //after drawing route animate camera
-                              BlocProvider.of<UberMapCubit>(context)
-                                  .getCurrentLocation(context);
-                            },
-                          ),
-                          const SizedBox(
-                            width: 50,
-                            height: 50,
-                          )
-                        ],
-                      ),
-                    ),
-                  ),
-                )
               ],
             ),
           );
@@ -236,53 +197,9 @@ class _HomePageState extends State<HomePage> {
           );
         }
 
-        return Center(
-          child: ElevatedButton(
-            onPressed: () {
-              BlocProvider.of<InternetCubit>(context)
-                  .monitorInternetConnection();
-              BlocProvider.of<DriverLocationCubit>(context)
-                  .getCurrentLocation(context);
-              BlocProvider.of<DriverLocationCubit>(context).getDriverLocation();
-            },
-            child: const Text("Retry"),
-          ),
-        );
+        return const NoInternetWidget(
+            message: "Something went wrong!!Please restart the app.");
       },
-    );
-  }
-}
-
-class UberMapInitialWidget extends StatefulWidget {
-  const UberMapInitialWidget({Key? key}) : super(key: key);
-
-  @override
-  _UberMapInitialWidgetState createState() => _UberMapInitialWidgetState();
-}
-
-class _UberMapInitialWidgetState extends State<UberMapInitialWidget> {
-  @override
-  Widget build(BuildContext context) {
-    const CameraPosition _initialLocation = CameraPosition(
-      target: LatLng(23.35125, 72.956),
-      zoom: 17.0,
-    );
-
-    return GoogleMap(
-      initialCameraPosition: _initialLocation,
-      tiltGesturesEnabled: true,
-      compassEnabled: false,
-      myLocationButtonEnabled: false,
-      onMapCreated: (controller) =>
-          BlocProvider.of<DriverLocationCubit>(context)
-              .mapController
-              .complete(controller),
-      myLocationEnabled: true,
-      mapType: MapType.normal,
-      zoomGesturesEnabled: true,
-      zoomControlsEnabled: false,
-      markers: {},
-      polylines: {},
     );
   }
 }

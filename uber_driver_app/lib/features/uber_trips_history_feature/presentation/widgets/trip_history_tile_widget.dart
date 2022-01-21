@@ -34,7 +34,6 @@ class _TripHistoryTileState extends State<TripHistoryTile> {
                       onPressed: () {
                         debugPrint('Received click');
                       },
-                      //arrived true and completed false -> ongoing
                       child: widget.tripHistoryEntity.tripHistoryModel
                                   .isCompleted ==
                               true
@@ -59,7 +58,7 @@ class _TripHistoryTileState extends State<TripHistoryTile> {
                       children: [
                         Padding(
                           padding: const EdgeInsets.only(right: 6),
-                          child: Text(DateFormat('dd-MM-yy').format(
+                          child: Text(DateFormat('dd-MM-yy hh:mm').format(
                               DateTime.parse(widget.tripHistoryEntity
                                   .tripHistoryModel.tripDate!))),
                         ),
@@ -105,6 +104,7 @@ class _TripHistoryTileState extends State<TripHistoryTile> {
               child: ListTile(
                 title: Text(
                   widget.tripHistoryEntity.tripHistoryModel.source.toString(),
+                  overflow: TextOverflow.ellipsis,
                   style: Theme.of(context).textTheme.headline6,
                 ),
                 leading: const Icon(Icons.my_location),
@@ -115,6 +115,7 @@ class _TripHistoryTileState extends State<TripHistoryTile> {
                 title: Text(
                   widget.tripHistoryEntity.tripHistoryModel.destination
                       .toString(),
+                  overflow: TextOverflow.ellipsis,
                   style: Theme.of(context).textTheme.headline6,
                 ),
                 leading: const Icon(Icons.location_on_sharp),
@@ -155,7 +156,10 @@ class _TripHistoryTileState extends State<TripHistoryTile> {
             size: 24,
           ),
         ),
-        Text(data,overflow: TextOverflow.ellipsis,),
+        Text(
+          data,
+          overflow: TextOverflow.ellipsis,
+        ),
       ],
     );
   }

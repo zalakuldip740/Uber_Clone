@@ -14,31 +14,30 @@ class UberProfileController extends GetxController {
   final UberAuthSignOutUseCase uberAuthSignOutUseCase;
   final UberAddProfileImgUseCase uberAddProfileImgUseCase;
 
-
   var driverData = {}.obs;
   var isLoaded = false.obs;
   late DriverEntity driverEntity;
 
-  UberProfileController(
-      {required this.uberProfileGetRiderProfileUsecase,
-      required this.uberProfileUpdateDriverUsecase,
-      required this.uberAuthGetUserUidUseCase,
-      required this.uberAuthSignOutUseCase,
-      required this.uberAddProfileImgUseCase,
-     });
+  UberProfileController({
+    required this.uberProfileGetRiderProfileUsecase,
+    required this.uberProfileUpdateDriverUsecase,
+    required this.uberAuthGetUserUidUseCase,
+    required this.uberAuthSignOutUseCase,
+    required this.uberAddProfileImgUseCase,
+  });
 
   getDriverProfile() async {
     String driverId = await uberAuthGetUserUidUseCase.call();
     final driverProfileData = uberProfileGetRiderProfileUsecase.call(driverId);
     driverProfileData.listen((data) {
-      driverEntity=data;
+      driverEntity = data;
       driverData['name'] = data.name;
       driverData['mobile'] = data.mobile;
       driverData['email'] = data.email;
       driverData['profile_img'] = data.profile_img;
       driverData['wallet'] = data.wallet;
       driverData['overall_rating'] = data.overall_rating;
-      driverData['city']= data.city;
+      driverData['city'] = data.city;
       isLoaded.value = true;
     });
   }
@@ -46,35 +45,34 @@ class UberProfileController extends GetxController {
   pickProfileImg() async {
     String driverId = await uberAuthGetUserUidUseCase.call();
     String profileUrl = await uberAddProfileImgUseCase.call(driverId);
-    Get.snackbar("please wait", "Uploading Image....");
+    Get.snackbar("please wait", "Uploading Image....",
+        snackPosition: SnackPosition.BOTTOM);
     driverData['profile_img'] = profileUrl;
   }
 
   updateDriverProfile(String name, String email) async {
     final driver = DriverEntity(
-        name:name,
-        email:email,
-      profile_img: driverData['profile_img'],
-      mobile: driverEntity.mobile,
-      wallet: driverEntity.wallet,
-      current_location: driverEntity.current_location,
-      driver_id: driverEntity.driver_id,
-      is_online: driverEntity.is_online,
-      overall_rating: driverEntity.overall_rating,
-      vehicle: driverEntity.vehicle,
-      city: driverEntity.city
-
-    );
+        name: name,
+        email: email,
+        profile_img: driverData['profile_img'],
+        mobile: driverEntity.mobile,
+        wallet: driverEntity.wallet,
+        current_location: driverEntity.current_location,
+        driver_id: driverEntity.driver_id,
+        is_online: driverEntity.is_online,
+        overall_rating: driverEntity.overall_rating,
+        vehicle: driverEntity.vehicle,
+        city: driverEntity.city);
     String driverId = await uberAuthGetUserUidUseCase.call();
     await uberProfileUpdateDriverUsecase.call(driver, driverId);
-    Get.snackbar("Done", "Profile Updated!");
+    Get.snackbar("Done", "Profile Updated!",
+        snackPosition: SnackPosition.BOTTOM);
   }
 
   signOut() async {
     await uberAuthSignOutUseCase.call();
-    Get.snackbar("Good Bye..", "Come Back Later!!");
+    Get.snackbar("Good Bye..", "Come Back Later!!",
+        snackPosition: SnackPosition.BOTTOM);
     Get.offAll(() => const UberSplashScreen());
   }
-
-
 }

@@ -13,7 +13,7 @@ class MapConfirmationBottomSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    //final UberMapController _uberMapController = Get.find();
+
     final UberMapController _uberMapController =
         Get.put(di.sl<UberMapController>());
     return Scaffold(

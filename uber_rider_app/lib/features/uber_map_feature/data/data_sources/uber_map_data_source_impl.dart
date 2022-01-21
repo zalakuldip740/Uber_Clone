@@ -6,7 +6,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 import 'package:get/get_rx/src/rx_types/rx_types.dart';
 import 'package:http/http.dart' as http;
-import 'package:uber_rider_app/config/app_constant.dart';
+import 'package:uber_rider_app/config/maps_api_key.dart';
 import 'package:uber_rider_app/features/uber_map_feature/data/data_sources/uber_map_data_source.dart';
 import 'package:uber_rider_app/features/uber_map_feature/data/models/generate_trip_model.dart';
 import 'package:uber_rider_app/features/uber_map_feature/data/models/rental_charges_model.dart';
@@ -26,7 +26,6 @@ class UberMapDataSourceImpl extends UberMapDataSource {
 
   @override
   Future<PredictionsList> getUberMapPrediction(String placeName) async {
-    //const baseUrl = 'maps.googleapis.com';
     final autoCompleteUrl = Uri.https(
         baseUrl,
         '/maps/api/place/autocomplete/json',

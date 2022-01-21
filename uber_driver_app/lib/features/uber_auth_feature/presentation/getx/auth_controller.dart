@@ -96,7 +96,7 @@ class UberAuthController extends GetxController {
   pickProfileImg() async {
     String driverId = await uberAuthGetUserUidUseCase.call();
     String profileUrl = await uberAddProfileImgUseCase.call(driverId);
-    Get.snackbar("please wait", "Uploading Image....");
+    Get.snackbar("please wait", "Uploading Image....",snackPosition: SnackPosition.BOTTOM);
     profileImgUrl.value = profileUrl;
   }
 
@@ -126,7 +126,7 @@ class UberAuthController extends GetxController {
     await uberProfileUpdateDriverUsecase.call(driverEntity, driverId);
     await uberUploadDriverVehicleDataUseCase.call(path, vehicleEntity);
 
-    Get.snackbar("Welcome.", "registration successful!");
+    Get.snackbar("Welcome.", "registration successful!",snackPosition: SnackPosition.BOTTOM);
     Navigator.pushReplacement(
         context,
         MaterialPageRoute(
