@@ -34,6 +34,7 @@ class _TripHistoryTileState extends State<TripHistoryTile> {
   Widget build(BuildContext context) {
     return SizedBox(
       height: widget.tripHistoryEntity.isCompleted! &&
+              widget.tripHistoryEntity.isPaymentDone! &&
               widget.tripHistoryEntity.rating == 0.0
           ? 250.0
           : 200.0,
@@ -50,33 +51,24 @@ class _TripHistoryTileState extends State<TripHistoryTile> {
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
                     ElevatedButton(
-                      onPressed: () {
-                        if (widget.tripHistoryEntity.isCompleted == false &&
-                            widget.tripHistoryEntity.isArrived == true &&
-                            widget.tripHistoryEntity.driverId != null) {
-                          Get.to(() =>
-                              UberMapLiveTrackingPage(index: widget.index));
-                        }
-                      },
+                      onPressed: () {},
                       child: widget.tripHistoryEntity.isCompleted == true
                           ? const Text('COMPLETED')
-                          : widget.tripHistoryEntity.driverId != null &&
-                                  widget.tripHistoryEntity.isArrived == true
-                              ? const Text('ONGOING(TRACK)')
-                              : widget.tripHistoryEntity.driverId == null
-                                  ? const Text('CANCELLED')
-                                  : const Text("WAITING"),
+                          : widget.tripHistoryEntity.isArrived == true
+                              ? const Text('ONGOING')
+                              : widget.tripHistoryEntity.readyForTrip == true
+                                  ? const Text("WAITING")
+                                  : const Text('CANCELLED'),
                       style: ButtonStyle(
                         elevation: MaterialStateProperty.all(0.0),
                         backgroundColor: widget.tripHistoryEntity.isCompleted!
                             ? MaterialStateProperty.all(Colors.green)
-                            : widget.tripHistoryEntity.driverId != null &&
-                                    widget.tripHistoryEntity.isArrived == true
+                            : widget.tripHistoryEntity.isArrived == true
                                 ? MaterialStateProperty.all(Colors.orange)
-                                : widget.tripHistoryEntity.driverId == null
-                                    ? MaterialStateProperty.all(Colors.red)
-                                    : MaterialStateProperty.all(
-                                        Colors.blueAccent),
+                                : widget.tripHistoryEntity.readyForTrip == true
+                                    ? MaterialStateProperty.all(
+                                        Colors.blueAccent)
+                                    : MaterialStateProperty.all(Colors.red),
                       ),
                     ),
                     if (!widget.tripHistoryEntity.isArrived! &&
@@ -98,9 +90,25 @@ class _TripHistoryTileState extends State<TripHistoryTile> {
                           color: Colors.green,
                         ),
                       ),
+                    if (widget.tripHistoryEntity.isArrived! &&
+                        !widget.tripHistoryEntity.isCompleted!)
+                      GestureDetector(
+                        onTap: () {
+                          Get.to(() =>
+                              UberMapLiveTrackingPage(index: widget.index));
+                        },
+                        child: const Text(
+                          "Track",
+                          style: TextStyle(
+                              color: Colors.blueAccent,
+                              fontWeight: FontWeight.w700),
+                        ),
+                      ),
                     if (widget.tripHistoryEntity.isCompleted! &&
                         !widget.tripHistoryEntity.isPaymentDone!)
                       ElevatedButton(
+                          style: ButtonStyle(
+                              elevation: MaterialStateProperty.all(0.0)),
                           onPressed: () {
                             Get.bottomSheet(
                                 SizedBox(

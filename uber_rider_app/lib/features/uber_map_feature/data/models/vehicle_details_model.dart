@@ -3,6 +3,7 @@ class VehicleModel {
   final String company;
   final String model;
   final String? numberPlate;
+
   VehicleModel(
       {required this.color,
       required this.company,

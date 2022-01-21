@@ -3,6 +3,7 @@ import 'package:uber_rider_app/features/uber_profile_feature/domain/repositories
 
 class UberProfileGetRiderProfileUsecase {
   final UberProfileRepository uberProfileRepository;
+
   UberProfileGetRiderProfileUsecase({required this.uberProfileRepository});
 
   Stream<RiderEntity> call(String riderId) {

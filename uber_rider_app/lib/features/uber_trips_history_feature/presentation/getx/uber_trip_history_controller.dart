@@ -25,7 +25,7 @@ class UberTripsHistoryController extends GetxController {
   var isMoreLoading = false.obs;
 
   getTripsHistory() async {
-    // tripsHistory.clear();
+    //tripsHistory.clear();
     if (tripsHistory.isNotEmpty) {
       isMoreLoading.value = true;
     }
@@ -33,7 +33,7 @@ class UberTripsHistoryController extends GetxController {
     final tripsHistoryData =
         uberGetTripHistoryUsecase.call(riderId, page.value);
     tripsHistoryData.listen((data) async {
-      tripsHistory.value = data;
+      // if (tripsHistory.value.length <= data.length) {
       for (int i = 0; i < data.length; i++) {
         if (data[i].driverId != null) {
           final driverId = data[i].driverId!.path.split('/').last.trim();
@@ -42,8 +42,13 @@ class UberTripsHistoryController extends GetxController {
           });
         }
       }
+      tripsHistory.value = data;
       page.value++;
-
+      // }
+      // else {
+      //   Get.snackbar("Sorry", "No more Data!",
+      //       snackPosition: SnackPosition.BOTTOM);
+      // }
       isTripLoaded.value = true;
       isMoreLoading.value = false;
     });

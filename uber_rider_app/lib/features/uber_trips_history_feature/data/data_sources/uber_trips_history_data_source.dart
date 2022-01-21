@@ -3,7 +3,9 @@ import 'package:uber_rider_app/features/uber_trips_history_feature/data/models/u
 
 abstract class UberTripsHistoryDataSource {
   Stream<List<TripHistoryModel>> uberGetTripHistory(String riderId, int page);
+
   Future<void> uberGiveTripRating(
       double rating, String tripId, String driverId);
+
   Future<DriverModel> uberGetTripDriver(String driverId);
 }

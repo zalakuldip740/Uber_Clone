@@ -47,8 +47,8 @@ class _MapWithSourceDestinationFieldState
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async {
-        _uberMapController.subscription.cancel();
         Get.offAll(() => const UberHomePage());
+        _uberMapController.subscription.cancel();
         return true;
       },
       child: Scaffold(
@@ -76,6 +76,17 @@ class _MapWithSourceDestinationFieldState
                               geodesic: true,
                               points:
                                   _uberMapController.polylineCoordinates.value),
+                          Polyline(
+                              polylineId:
+                                  const PolylineId("polyLineForAcptDriver"),
+                              color: Colors.black,
+                              width: 6,
+                              jointType: JointType.round,
+                              startCap: Cap.roundCap,
+                              endCap: Cap.roundCap,
+                              geodesic: true,
+                              points: _uberMapController
+                                  .polylineCoordinatesforacptDriver.value),
                         },
                         zoomControlsEnabled: false,
                         zoomGesturesEnabled: true,
@@ -113,6 +124,7 @@ class _MapWithSourceDestinationFieldState
                                   shape: BoxShape.circle, color: Colors.white),
                               child: GestureDetector(
                                 onTap: () {
+                                  // _uberMapController.subscription.cancel();
                                   Get.offAll(() => const UberHomePage());
                                   _uberMapController.subscription.cancel();
                                 },
@@ -230,6 +242,28 @@ class _MapWithSourceDestinationFieldState
                     ),
                   ),
                 ],
+              ),
+              Visibility(
+                visible: _uberMapController.isDriverLoading.value,
+                child: Container(
+                  alignment: Alignment.bottomCenter,
+                  margin: const EdgeInsets.only(bottom: 15),
+                  child: Positioned(
+                      //bottom: 15,
+                      child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    //crossAxisAlignment: CrossAxisAlignment.center,
+                    children: const [
+                      CircularProgressIndicator(
+                        color: Colors.black,
+                      ),
+                      Text(
+                        "  Loading Rides....",
+                        style: TextStyle(fontWeight: FontWeight.w600),
+                      ),
+                    ],
+                  )),
+                ),
               ),
             ],
           ),

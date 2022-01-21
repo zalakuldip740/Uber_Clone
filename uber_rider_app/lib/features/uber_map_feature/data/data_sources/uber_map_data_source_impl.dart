@@ -90,16 +90,10 @@ class UberMapDataSourceImpl extends UberMapDataSource {
 
   @override
   Stream generateTrip(GenerateTripModel generateTripModel) {
-    final todayDate = DateTime.now();
-    String docId = generateTripModel.riderId!.path.split('/').last.toString() +
-        todayDate.day.toString() +
-        todayDate.month.toString() +
-        todayDate.year.toString() +
-        todayDate.hour.toString();
     final genarateTripCollection = firestore.collection("trips");
-    genarateTripCollection.doc(docId).set({
+    genarateTripCollection.doc(generateTripModel.tripId).set({
       //isArrived
-      'trip_id': docId,
+      'trip_id': generateTripModel.tripId,
       'destination': generateTripModel.destination,
       'destination_location': generateTripModel.destinationLocation,
       'distance': generateTripModel.distance,
@@ -117,7 +111,7 @@ class UberMapDataSourceImpl extends UberMapDataSource {
       'is_payment_done': generateTripModel.isPaymentDone
     });
 
-    return genarateTripCollection.doc(docId).snapshots();
+    return genarateTripCollection.doc(generateTripModel.tripId).snapshots();
   }
 
   @override
@@ -132,10 +126,18 @@ class UberMapDataSourceImpl extends UberMapDataSource {
   }
 
   @override
-  Future<void> cancelTrip(String tripId) async {
+  Future<void> cancelTrip(String tripId, bool isNewTripGeneration) async {
     try {
       final genarateTripCollection = firestore.collection("trips");
-      await genarateTripCollection.doc(tripId).update({'driver_id': null});
+      if (!isNewTripGeneration) {
+        await genarateTripCollection.doc(tripId).update({'driver_id': null});
+      } else {
+        await genarateTripCollection.doc(tripId).get().then((value) async {
+          if (value.data()!['ready_for_trip'] == false) {
+            await genarateTripCollection.doc(tripId).delete();
+          }
+        });
+      }
     } on FirebaseException catch (e) {
       Get.snackbar("Error", e.code.toString());
     }

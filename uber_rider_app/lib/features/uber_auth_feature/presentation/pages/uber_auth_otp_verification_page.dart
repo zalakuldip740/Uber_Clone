@@ -20,6 +20,7 @@ class _OtpVerificationPageState extends State<OtpVerificationPage> {
   final TextEditingController code5 = TextEditingController();
   final TextEditingController code6 = TextEditingController();
   final UberAuthController _uberAuthController = Get.find();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

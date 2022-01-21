@@ -2,6 +2,7 @@ import 'package:uber_rider_app/features/uber_profile_feature/domain/repositories
 
 class UberWalletAddMoneyUsecase {
   final UberProfileRepository uberProfileRepository;
+
   UberWalletAddMoneyUsecase({required this.uberProfileRepository});
 
   Future<void> call(String riderId, int addAmt) async {

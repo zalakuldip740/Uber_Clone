@@ -5,7 +5,7 @@ class UberCancelTripUseCase {
 
   UberCancelTripUseCase({required this.uberMapRepository});
 
-  Future<void> call(String tripId) async {
-    return await uberMapRepository.cancelTrip(tripId);
+  Future<void> call(String tripId, bool isNewTripGeneration) async {
+    return await uberMapRepository.cancelTrip(tripId, isNewTripGeneration);
   }
 }

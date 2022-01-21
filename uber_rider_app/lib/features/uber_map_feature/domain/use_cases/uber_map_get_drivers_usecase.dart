@@ -3,7 +3,9 @@ import 'package:uber_rider_app/features/uber_map_feature/domain/repositories/ube
 
 class UberMapGetDriversUsecase {
   final UberMapRepository uberMapRepository;
+
   UberMapGetDriversUsecase({required this.uberMapRepository});
+
   Stream<List<UberDriverEntity>> call() {
     return uberMapRepository.getAvailableDrivers();
   }

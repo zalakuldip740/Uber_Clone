@@ -71,8 +71,8 @@ class UberMapRepositoryImpl extends UberMapRepository {
   }
 
   @override
-  Future<void> cancelTrip(String tripId) async {
-    return await uberMapDataSource.cancelTrip(tripId);
+  Future<void> cancelTrip(String tripId, bool isNewTripGeneration) async {
+    return await uberMapDataSource.cancelTrip(tripId, isNewTripGeneration);
   }
 
   @override

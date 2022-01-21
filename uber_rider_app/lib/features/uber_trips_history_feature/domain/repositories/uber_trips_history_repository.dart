@@ -6,5 +6,6 @@ abstract class UberTripHistoryRepository {
 
   Future<void> uberGiveTripRating(
       double rating, String tripId, String driverId);
+
   Future<UberDriverEntity> uberGetTripDriver(String driverId);
 }

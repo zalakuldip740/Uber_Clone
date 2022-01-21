@@ -11,6 +11,7 @@ class UberNetWorkStatusChecker extends GetxController {
   final Connectivity _connectivity = Connectivity();
   late StreamSubscription<ConnectivityResult> _connectivitySubscription;
   var isNetworkAvl = false.obs;
+
   updateConnectionStatus() {
     _connectivitySubscription =
         _connectivity.onConnectivityChanged.listen((result) {

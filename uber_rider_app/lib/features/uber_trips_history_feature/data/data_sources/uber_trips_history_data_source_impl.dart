@@ -16,10 +16,11 @@ class UberTripsHistoryDataSourceImpl extends UberTripsHistoryDataSource {
         .where('rider_id',
             isEqualTo:
                 FirebaseFirestore.instance.collection('riders').doc(riderId))
+        .orderBy("trip_date", descending: true)
         .limit(5 * page);
 
     return tripsCollectionRef.snapshots().map((querySnap) {
-      return querySnap.docs.reversed
+      return querySnap.docs
           .map((docSnap) => TripHistoryModel.fromSnapshot(docSnap))
           .toList();
     });
