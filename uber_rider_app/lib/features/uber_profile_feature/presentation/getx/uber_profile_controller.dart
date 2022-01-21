@@ -46,7 +46,8 @@ class UberProfileController extends GetxController {
   pickProfileImg() async {
     String riderId = await uberAuthGetUserUidUseCase.call();
     String profileUrl = await uberAddProfileImgUseCase.call(riderId);
-    Get.snackbar("please wait", "Uploading Image....");
+    Get.snackbar("please wait", "Uploading Image....",
+        snackPosition: SnackPosition.BOTTOM);
     riderData['profileUrl'] = profileUrl;
   }
 
@@ -68,7 +69,8 @@ class UberProfileController extends GetxController {
 
   signOut() async {
     await uberAuthSignOutUseCase.call();
-    Get.snackbar('done', "logout successful!");
+    Get.snackbar('GoodBye..', "See you later.",
+        snackPosition: SnackPosition.BOTTOM);
     Get.offAll(() => const UberSplashScreen());
   }
 

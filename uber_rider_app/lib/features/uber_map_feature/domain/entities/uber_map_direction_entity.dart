@@ -13,6 +13,7 @@ class UberMapDirectionEntity extends Equatable {
       required this.distanceText,
       required this.durationText,
       required this.enCodedPoints});
+
   @override
   // TODO: implement props
   List<Object?> get props =>

@@ -43,8 +43,8 @@ dependencies:
 
   # maps related packages
   google_maps_flutter: ^2.1.1  # map
-  geolocator: ^8.0.1   # current loc
-  geocoding: ^2.0.1   # place name to latlng
+  geolocator: ^8.0.3   # current loc
+  geocoding: ^2.0.2   # place name to latlng
   flutter_polyline_points: ^1.0.0   # polyline on map
 
   # state management packages
@@ -58,16 +58,19 @@ dependencies:
   http: ^0.13.4
 
   # Firebase packages
-  firebase_auth: ^3.3.4
-  cloud_firestore: ^3.1.5
-  firebase_storage: ^10.2.4
-  firebase_core: ^1.10.6
+  firebase_auth: ^3.3.5
+  cloud_firestore: ^3.1.6
+  firebase_storage: ^10.2.5
+  firebase_core: ^1.11.0
 
   # phone call
   flutter_phone_direct_caller: ^2.1.0
 
   # network connectivity
   connectivity_plus: ^2.2.0
+
+  # unique id generator
+  uuid: ^3.0.5
 
 dev_dependencies:
   flutter_test:
@@ -93,14 +96,14 @@ flutter:
 
   # To add assets to your application, add an assets section, like this:
   assets:
-     - assets/car.png
-     - assets/bike.png
-     - assets/auto.png
-     - assets/mobile_auth_img.png
-     - assets/otp_verification_img.png
-     - assets/welcome_img.png
-     - assets/nonet.jpg
-     - assets/home_car.png
+    - assets/car.png
+    - assets/bike.png
+    - assets/auto.png
+    - assets/mobile_auth_img.png
+    - assets/otp_verification_img.png
+    - assets/welcome_img.png
+    - assets/nonet.jpg
+    - assets/home_car.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

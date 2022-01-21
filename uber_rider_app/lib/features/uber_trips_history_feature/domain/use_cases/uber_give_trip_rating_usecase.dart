@@ -2,6 +2,7 @@ import 'package:uber_rider_app/features/uber_trips_history_feature/domain/reposi
 
 class UberGiveTripRatingUsecase {
   final UberTripHistoryRepository uberTripHistoryRepository;
+
   UberGiveTripRatingUsecase({required this.uberTripHistoryRepository});
 
   Future<void> call(double rating, String tripId, String driverId) async {

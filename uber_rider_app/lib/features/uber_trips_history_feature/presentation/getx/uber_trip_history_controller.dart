@@ -34,7 +34,6 @@ class UberTripsHistoryController extends GetxController {
         uberGetTripHistoryUsecase.call(riderId, page.value);
     tripsHistoryData.listen((data) async {
       // if (tripsHistory.value.length <= data.length) {
-      tripsHistory.value = data;
       for (int i = 0; i < data.length; i++) {
         if (data[i].driverId != null) {
           final driverId = data[i].driverId!.path.split('/').last.trim();
@@ -43,6 +42,7 @@ class UberTripsHistoryController extends GetxController {
           });
         }
       }
+      tripsHistory.value = data;
       page.value++;
       // }
       // else {

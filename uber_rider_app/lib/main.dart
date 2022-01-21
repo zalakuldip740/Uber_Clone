@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-
 import 'features/uber_auth_feature/presentation/pages/uber_splash_screen.dart';
 import 'injection_container.dart' as di;
 

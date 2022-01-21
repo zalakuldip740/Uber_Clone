@@ -3,6 +3,7 @@ import 'package:uber_rider_app/features/uber_trips_history_feature/domain/reposi
 
 class UberGetTripHistoryUsecase {
   final UberTripHistoryRepository uberTripHistoryRepository;
+
   UberGetTripHistoryUsecase({required this.uberTripHistoryRepository});
 
   Stream<List<TripHistoryEntity>> call(String riderId, int page) {

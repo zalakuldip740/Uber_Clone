@@ -3,7 +3,9 @@ import 'package:uber_rider_app/features/uber_home_page_feature/domain/repositori
 
 class GetUserCurrentLocationUsecase {
   final UserCurrentLocationRepository userCurrentLocationRepository;
+
   GetUserCurrentLocationUsecase({required this.userCurrentLocationRepository});
+
   Future<Position> call() async {
     return await userCurrentLocationRepository.getUserCurrentLocation();
   }

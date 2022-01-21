@@ -72,7 +72,7 @@ class MapConfirmationBottomSheet extends StatelessWidget {
                   ? DriverDetails(uberMapController: _uberMapController)
                   : _uberMapController.findDriverLoading.value
                       ? Lottie.network(
-                          'https://assets9.lottiefiles.com/packages/lf20_mvsfxvmk.json')
+                          'https://assets9.lottiefiles.com/packages/lf20_ubozqrue.json')
                       : ListView.builder(
                           //shrinkWrap: true,
                           itemCount: _uberMapController

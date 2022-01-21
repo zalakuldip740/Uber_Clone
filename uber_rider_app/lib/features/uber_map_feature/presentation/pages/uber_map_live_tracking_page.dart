@@ -46,7 +46,7 @@ class _UberMapLiveTrackingPageState extends State<UberMapLiveTrackingPage> {
         body: _uberLiveTrackingController.isLoading.value
             ? Center(
                 child: lottie.Lottie.network(
-                    'https://assets9.lottiefiles.com/packages/lf20_mvsfxvmk.json'),
+                    'https://assets9.lottiefiles.com/packages/lf20_ubozqrue.json'),
               )
             : Stack(
                 children: [

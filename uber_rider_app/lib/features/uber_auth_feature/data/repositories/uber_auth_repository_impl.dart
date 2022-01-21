@@ -3,7 +3,9 @@ import 'package:uber_rider_app/features/uber_auth_feature/domain/repositories/ub
 
 class UberAuthRepositoryImpl extends UberAuthRepository {
   final UberAuthDataSource uberAuthDataSource;
+
   UberAuthRepositoryImpl({required this.uberAuthDataSource});
+
   @override
   Future<bool> uberAuthIsSignIn() async {
     return await uberAuthDataSource.uberAuthIsSignIn();

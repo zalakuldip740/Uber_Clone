@@ -3,6 +3,7 @@ import 'package:uber_rider_app/features/uber_profile_feature/domain/repositories
 
 class UberProfileUpdateRiderUsecase {
   final UberProfileRepository uberProfileRepository;
+
   UberProfileUpdateRiderUsecase({required this.uberProfileRepository});
 
   Future<void> call(RiderEntity riderEntity, String riderId) async {

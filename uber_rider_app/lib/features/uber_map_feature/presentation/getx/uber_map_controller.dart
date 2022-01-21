@@ -23,6 +23,7 @@ import 'package:uber_rider_app/features/uber_map_feature/domain/use_cases/uber_m
 import 'package:uber_rider_app/features/uber_map_feature/domain/use_cases/uber_map_prediction_usecase.dart';
 import 'package:uber_rider_app/features/uber_map_feature/domain/use_cases/vehicle_details_usecase.dart';
 import 'package:uber_rider_app/features/uber_trips_history_feature/presentation/pages/uber_trips_history_page.dart';
+import 'package:uuid/uuid.dart';
 
 class UberMapController extends GetxController {
   final UberMapPredictionUsecase uberMapPredictionUsecase;
@@ -49,6 +50,7 @@ class UberMapController extends GetxController {
 
   // polyline
   var polylineCoordinates = <LatLng>[].obs;
+  var polylineCoordinatesforacptDriver = <LatLng>[].obs;
   PolylinePoints polylinePoints = PolylinePoints();
 
   //markers
@@ -61,8 +63,9 @@ class UberMapController extends GetxController {
   var carRent = 0.obs;
   var bikeRent = 0.obs;
   var autoRent = 0.obs;
-
+  var isDriverLoading = false.obs;
   var findDriverLoading = false.obs;
+  var prevTripId = "xyz".obs;
 
   var reqAccepted = false.obs;
 
@@ -105,7 +108,9 @@ class UberMapController extends GetxController {
           destinationLocations[0].latitude,
           destinationLocations[0].longitude,
           "destination_marker",
-          BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed));
+          BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueGreen),
+          "default",
+          "Destination Location");
       animateCamera(
           destinationLocations[0].latitude, destinationLocations[0].longitude);
     } else {
@@ -119,7 +124,9 @@ class UberMapController extends GetxController {
           sourceLocations[0].latitude,
           sourceLocations[0].longitude,
           "source_marker",
-          BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueGreen));
+          BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed),
+          "default",
+          "Source Location");
       animateCamera(sourceLocations[0].latitude, sourceLocations[0].longitude);
     } // set place in textfield
     if (sourcePlaceName.value.isNotEmpty &&
@@ -143,12 +150,16 @@ class UberMapController extends GetxController {
     uberMapDirectionData.value = directionData;
 
     // get drivers
+    isDriverLoading.value = true;
     Stream<List<UberDriverEntity>> availableDriversData =
         uberMapGetDriversUsecase.call();
     availableDriversList.clear();
-    subscription = availableDriversData.listen((driverData) async {
+    subscription = availableDriversData.listen((driverData) {
       // if (availableDriversList.length <= driverData.length) {
       availableDriversList.clear();
+      if (markers.length > 2) {
+        markers.removeRange(2, markers.length - 1);
+      }
       for (int i = 0; i < driverData.length; i++) {
         if (Geolocator.distanceBetween(
                 sourceLatitude.value,
@@ -158,23 +169,23 @@ class UberMapController extends GetxController {
             5000) {
           availableDriversList.add(driverData[i]);
           addMarkers(
-            driverData[i].currentLocation!.latitude,
-            driverData[i].currentLocation!.longitude,
-            i.toString(),
-            // driverData[i].driverId.toString(),
-            BitmapDescriptor.fromBytes(await getBytesFromAsset(
-                driverData[i].vehicle!.path.split('/').first == "cars"
-                    ? 'assets/car.png'
-                    : driverData[i].vehicle!.path.split('/').first == "bikes"
-                        ? 'assets/bike.png'
-                        : 'assets/auto.png',
-                85)),
-          );
+              driverData[i].currentLocation!.latitude,
+              driverData[i].currentLocation!.longitude,
+              i.toString(),
+              driverData[i].vehicle!.path.split('/').first == "cars"
+                  ? 'assets/car.png'
+                  : driverData[i].vehicle!.path.split('/').first == "bikes"
+                      ? 'assets/bike.png'
+                      : 'assets/auto.png',
+              "img",
+              "Driver Location");
         }
       }
       // }
+      isDriverLoading.value = false;
       if (availableDriversList.isNotEmpty) {
         getRentalCharges();
+        isPoliLineDraw.value = true;
       } else {
         isPoliLineDraw.value = false;
         Get.snackbar(
@@ -199,10 +210,14 @@ class UberMapController extends GetxController {
     isPoliLineDraw.value = true;
   }
 
-  addMarkers(double latitude, double longitude, String markerId, icon) {
+  addMarkers(double latitude, double longitude, String markerId, icon,
+      String type, String infoWindow) async {
     Marker marker = Marker(
-        icon: icon,
+        icon: type == "img"
+            ? BitmapDescriptor.fromBytes(await getBytesFromAsset(icon, 85))
+            : icon,
         markerId: MarkerId(markerId),
+        infoWindow: InfoWindow(title: infoWindow),
         position: LatLng(latitude, longitude));
     //markers[markerId] = marker;
     markers.add(marker);
@@ -250,6 +265,7 @@ class UberMapController extends GetxController {
   }
 
   generateTrip(UberDriverEntity driverData, int index) async {
+    uberCancelTripUseCase.call(prevTripId.value, true); // if canceled
     subscription.pause();
     String vehicleType = driverData.vehicle!.path.split('/').first;
     String driverId = driverData.driverId.toString();
@@ -258,6 +274,8 @@ class UberMapController extends GetxController {
         FirebaseFirestore.instance.doc("/drivers/${driverId.trim()}");
     DocumentReference riderIdRef =
         FirebaseFirestore.instance.doc("/riders/$riderId");
+    var tripId = const Uuid().v4();
+    prevTripId.value = tripId;
     final generateTripModel = GenerateTripModel(
         sourcePlaceName.value,
         destinationPlaceName.value,
@@ -277,7 +295,8 @@ class UberMapController extends GetxController {
                 ? autoRent.value
                 : bikeRent.value,
         false,
-        false);
+        false,
+        tripId);
     Stream reqStatusData = uberMapGenerateTripUseCase.call(generateTripModel);
     findDriverLoading.value = true;
     late StreamSubscription tripSubscription;
@@ -307,6 +326,34 @@ class UberMapController extends GetxController {
             driverData.profile_img.toString();
         req_accepted_driver_and_vehicle_data["overall_rating"] =
             driverData.overall_rating.toString();
+        if (markers.length > 2) {
+          markers.removeRange(2, markers.length - 1);
+        } // clear extra marker
+        addMarkers(
+            driverData.currentLocation!.latitude,
+            driverData.currentLocation!.longitude,
+            "acpt_driver_marker",
+            driverData.vehicle!.path.split('/').first == "cars"
+                ? 'assets/car.png'
+                : driverData.vehicle!.path.split('/').first == "bikes"
+                    ? 'assets/bike.png'
+                    : 'assets/auto.png',
+            "img",
+            "Driver Location"); // add only acpt_driver_marker
+
+        // draw path from acpt_driver to consumer
+        final directionData = await uberMapDirectionUsecase.call(
+            driverData.currentLocation!.latitude,
+            driverData.currentLocation!.longitude,
+            sourceLatitude.value,
+            sourceLongitude.value);
+        List<PointLatLng> result = polylinePoints
+            .decodePolyline(directionData[0].enCodedPoints.toString());
+        polylineCoordinatesforacptDriver.clear();
+        result.forEach((PointLatLng point) {
+          polylineCoordinatesforacptDriver.value
+              .add(LatLng(point.latitude, point.longitude));
+        });
         if (findDriverLoading.value && reqAccepted.value == false) {
           findDriverLoading.value = false;
           Get.snackbar(
@@ -318,14 +365,14 @@ class UberMapController extends GetxController {
       } else if (data.data()['is_arrived'] && !data.data()['is_completed']) {
         Get.snackbar(
             "driver arrived!", "Now you can track from tripHistory page!",
-            duration: const Duration(seconds: 5),
             snackPosition: SnackPosition.BOTTOM);
         tripSubscription.cancel();
         Get.off(() => const TripHistory());
       }
-      Timer(const Duration(seconds: 45), () {
+      Timer(const Duration(seconds: 60), () {
         if (reqStatus == false && findDriverLoading.value) {
-          uberCancelTripUseCase.call(data.data()['trip_id']);
+          tripSubscription.cancel();
+          uberCancelTripUseCase.call(tripId, false);
           // availableDriversList.value.removeAt(index);
           Get.snackbar(
               "Sorry !", "request denied by driver,please choose other driver",

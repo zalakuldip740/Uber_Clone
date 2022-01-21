@@ -19,6 +19,7 @@ class UberProfilePage extends StatefulWidget {
 class _UberProfilePageState extends State<UberProfilePage> {
   final UberProfileController _uberProfileController =
       Get.put(di.sl<UberProfileController>());
+
   @override
   void initState() {
     // TODO: implement initState

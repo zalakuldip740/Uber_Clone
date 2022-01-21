@@ -9,6 +9,7 @@ class UberMapPredictionEntity extends Equatable {
       {required this.secondaryText,
       required this.mainText,
       required this.placeId});
+
   @override
   // TODO: implement props
   List<Object?> get props => [secondaryText, mainText, placeId];

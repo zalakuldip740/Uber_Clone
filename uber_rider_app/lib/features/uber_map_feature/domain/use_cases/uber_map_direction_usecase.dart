@@ -3,7 +3,9 @@ import 'package:uber_rider_app/features/uber_map_feature/domain/repositories/ube
 
 class UberMapDirectionUsecase {
   final UberMapRepository uberMapRepository;
+
   UberMapDirectionUsecase({required this.uberMapRepository});
+
   Future<List<UberMapDirectionEntity>> call(double sourceLat, double sourceLng,
       double destinationLat, double destinationLng) async {
     return await uberMapRepository.getUberMapDirection(

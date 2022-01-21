@@ -1,10 +1,7 @@
 import 'dart:async';
 import 'dart:typed_data';
 import 'dart:ui' as ui;
-import 'dart:ui';
 
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:geolocator/geolocator.dart';
@@ -108,14 +105,14 @@ class UberLiveTrackingController extends GetxController {
               85)),
           "live_marker",
           liveLocLatitude.value,
-          liveLocLongitude.value);
-      addMarkers(BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed),
-          "destination_marker", destinationLat.value, destinationLng.value);
-      // addMarkers(
-      //     BitmapDescriptor.fromBytes(await getBytesFromCanvas(200, 100)),
-      //     "text_marker",
-      //     (liveLocLatitude.value + 0.000300),
-      //     liveLocLongitude.value);
+          liveLocLongitude.value,
+          "Your Location");
+      addMarkers(
+          BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed),
+          "destination_marker",
+          destinationLat.value,
+          destinationLng.value,
+          "Destination Location");
       addPolyLine();
     }
   }
@@ -162,40 +159,14 @@ class UberLiveTrackingController extends GetxController {
     return res;
   }
 
-  addMarkers(icon, String markerId, double lat, double lng) async {
+  addMarkers(
+      icon, String markerId, double lat, double lng, String infoWindow) async {
     Marker marker = Marker(
-        icon: icon, markerId: MarkerId(markerId), position: LatLng(lat, lng));
+        icon: icon,
+        markerId: MarkerId(markerId),
+        position: LatLng(lat, lng),
+        infoWindow: InfoWindow(title: infoWindow));
     markers.add(marker);
-  }
-
-  Future<Uint8List> getBytesFromCanvas(int width, int height) async {
-    final ui.PictureRecorder pictureRecorder = ui.PictureRecorder();
-    final Canvas canvas = Canvas(pictureRecorder);
-    final Paint paint = Paint()..color = Colors.transparent;
-    const Radius radius = Radius.circular(20.0);
-    canvas.drawRRect(
-        RRect.fromRectAndCorners(
-          Rect.fromLTWH(0.0, 0.0, width.toDouble(), height.toDouble()),
-          topLeft: radius,
-          topRight: radius,
-          bottomLeft: radius,
-          bottomRight: radius,
-        ),
-        paint);
-    TextPainter painter = TextPainter(textDirection: TextDirection.ltr);
-    painter.text = const TextSpan(
-      text: 'You are Here ->',
-      style: TextStyle(
-          fontSize: 25.0, color: Colors.black, fontWeight: FontWeight.w700),
-    );
-    painter.layout();
-    painter.paint(
-        canvas,
-        Offset((width * 0.5) - painter.width * 0.5,
-            (height * 0.5) - painter.height * 0.5));
-    final img = await pictureRecorder.endRecording().toImage(width, height);
-    final data = await img.toByteData(format: ui.ImageByteFormat.png);
-    return data!.buffer.asUint8List();
   }
 
   Future<Uint8List> getBytesFromAsset(String path, int width) async {

@@ -29,6 +29,7 @@ class _UberHomePageState extends State<UberHomePage> {
     target: LatLng(23.030357, 72.517845),
     zoom: 14.4746,
   );
+
   @override
   void initState() {
     super.initState();
@@ -123,7 +124,7 @@ class _UberHomePageState extends State<UberHomePage> {
                         zoomControlsEnabled: false,
                         zoomGesturesEnabled: true,
                         onMapCreated: (GoogleMapController controller) {
-                          // _uberHomeController.controller.complete(controller);
+                          _uberHomeController.controller.complete(controller);
                           CameraPosition _newCameraPos = CameraPosition(
                             target: LatLng(_uberHomeController.currentLat.value,
                                 _uberHomeController.currentLng.value),

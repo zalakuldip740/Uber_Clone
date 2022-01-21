@@ -12,10 +12,15 @@ abstract class UberMapRepository {
       double sourceLng, double destinationLat, double destinationLng);
 
   Stream<List<UberDriverEntity>> getAvailableDrivers();
+
   Future<RentalChargeModel> getRentalChargeForVehicle(double kms);
+
   Stream generateTrip(GenerateTripModel generateTripModel);
+
   Future<VehicleModel> getVehicleDetails(String vehicleType, String driverId);
-  Future<void> cancelTrip(String tripId);
+
+  Future<void> cancelTrip(String tripId, bool isNewTripGeneration);
+
   Future<String> tripPayment(String riderId, String driverId, int tripAmount,
       String tripId, String payMode);
 }
